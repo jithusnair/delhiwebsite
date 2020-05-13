@@ -2,8 +2,13 @@
     import Modal from '../ui/Modal.svelte';
     import Loading from '../ui/Loading.svelte';
     import Error from '../ui/Error.svelte';
+    
     import { scale } from 'svelte/transition';
+    
     import { createEventDispatcher } from 'svelte';
+    import { stores } from '@sapper/app';
+
+    const { session } = stores();
     
     const dispatch = createEventDispatcher();
 
