@@ -160,7 +160,7 @@
         <form on:submit|preventDefault={login}>
             <!-- {#if loginErr} -->
             <Error showErr={loginErr? true: false}>
-                <p class="error-message">Missing credentials</p>
+                <p class="error-message">{loginErr}</p>
             </Error>
             <!-- {/if} -->
             <input bind:value={loginUsername} id="username" type="text" name="username" placeholder="Username">
