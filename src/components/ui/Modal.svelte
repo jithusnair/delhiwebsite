@@ -1,7 +1,7 @@
 <script>
     import { fade } from 'svelte/transition';
     
-    export let showFadeBackground = true;
+    export let displayModal = true;
 </script>
 
 <style>
@@ -16,7 +16,7 @@
     }
 </style>
 
-{#if showFadeBackground}
+{#if displayModal}
     <div transition:fade={{duration: 500}} class="background">
         <slot></slot>
     </div>
