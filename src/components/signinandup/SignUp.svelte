@@ -112,6 +112,21 @@
             console.error('Error:', error);
             }); 
     }
+
+    function cleanUpClose () {
+        touchedName = false;
+        touchedUsername = false
+        touchedEmail = false;
+        touchedMobile = false;
+        touchedPassword = false;
+        fullname = '';
+        username = '';
+        email = '';
+        mobile = '';
+        password = '';
+        dispatch('close');
+    }
+    
 </script>
 
 <style>
