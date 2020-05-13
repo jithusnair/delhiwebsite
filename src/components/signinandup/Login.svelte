@@ -146,7 +146,7 @@
         <h3>Login</h3>
         <form on:submit|preventDefault={login}>
             <!-- {#if loginErr} -->
-            <Error showErr=true>
+            <Error showErr={loginErr? true: false}>
                 <p class="error-message">Missing credentials</p>
             </Error>
             <!-- {/if} -->
