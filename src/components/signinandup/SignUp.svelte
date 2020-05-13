@@ -124,9 +124,9 @@
         email = '';
         mobile = '';
         password = '';
-        dispatch('close');
+        dispatch('signupclose');
     }
-    
+
 </script>
 
 <style>
@@ -287,7 +287,7 @@
             
             <button disabled={!formIsValid}>Submit</button>
             <p class="switchStatement">Already registered? 
-                <span on:click={() => dispatch('switch')} class="switchModal">Sign In</span>
+                <span on:click={() => dispatch('loginopen')} class="switchModal">Sign In</span>
             </p>
 
             <!-- Close Button -->
