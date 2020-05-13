@@ -10,6 +10,8 @@
 
     const dispatch = createEventDispatcher();
 
+    export let display = false;
+
     let fullname = '';
     let username = '';
     let email = '';
@@ -190,7 +192,7 @@
     }
 </style>
 
-<Modal>
+<Modal displayModal={display}>
     <div transition:scale={{duration: 500}} class="signUp">
         <!-- Loading Spinner -->
         {#if loading}
