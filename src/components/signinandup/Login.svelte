@@ -18,6 +18,7 @@
     let loginErr = '';
 
     let loading = false;
+
     export let display = false;
 
     function login() {
@@ -56,7 +57,7 @@
         loginUsername = '';
         loginPassword = '';
         loginErr = null;
-        dispatch('close');
+        dispatch('loginclose');
     }
 </script>
 
@@ -172,7 +173,7 @@
             </div>
         </form>
         <p class="switchStatement">New registration? 
-            <span on:click={() => dispatch('switch')} class="switchModal">Sign Up</span>
+            <span on:click={() => dispatch('signupopen')} class="switchModal">Sign Up</span>
         </p>
     </div>
 </Modal>
