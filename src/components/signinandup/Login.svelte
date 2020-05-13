@@ -167,7 +167,7 @@
             <input bind:value={loginPassword} id='password' type="password" name='password' placeholder="Password">
             <p class="forgot" on:click={()=> dispatch('forgot')}>Forgot password?</p>
             <button id="loginBtn">Log In</button>
-            <div on:click={() => cleanUpClose} class="closeBtn">
+            <div on:click={cleanUpClose} class="closeBtn">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </div>
         </form>
