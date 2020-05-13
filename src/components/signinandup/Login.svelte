@@ -18,6 +18,7 @@
     let loginErr = '';
 
     let loading = false;
+    export let display = false;
 
     function login() {
         loading = true;
@@ -49,6 +50,13 @@
             .catch((error) => {
             console.error('Error:', error);
             });
+    }
+
+    function cleanUpClose () {
+        loginUsername = '';
+        loginPassword = '';
+        loginErr = null;
+        dispatch('close');
     }
 </script>
 
@@ -141,7 +149,7 @@
     }
 </style>
 
-<Modal>
+<Modal displayModal={display}>
     <!-- Loading Spinner -->
     {#if loading}
     <div class="loading"><Loading/></div>  
@@ -159,7 +167,7 @@
             <input bind:value={loginPassword} id='password' type="password" name='password' placeholder="Password">
             <p class="forgot" on:click={()=> dispatch('forgot')}>Forgot password?</p>
             <button id="loginBtn">Log In</button>
-            <div on:click={() => dispatch('close')} class="closeBtn">
+            <div on:click={() => cleanUpClose} class="closeBtn">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </div>
         </form>
