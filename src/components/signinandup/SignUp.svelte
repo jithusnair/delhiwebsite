@@ -1,8 +1,10 @@
 <script>
     import { isEmpty, isSecure, isMobile, isValidEmail } from "../../_helpers/validation.js";
+    
     import Modal from '../ui/Modal.svelte';
     import Loading from '../ui/Loading.svelte';
     import Error from '../ui/Error.svelte';
+    
     import { scale } from 'svelte/transition';
     import { createEventDispatcher } from 'svelte';
 
@@ -188,91 +190,93 @@
     }
 </style>
 
-<div transition:scale={{duration: 500}} class="signUp">
-    <!-- Loading Spinner -->
-    {#if loading}
-    <div class="loading"><Loading/></div>  
-    {/if}
-    <h3>Sign Up for free</h3>
-
-    <form on:submit|preventDefault={signUp}>
-     <Error showErr=true>
-        <p class="error-message">Missing credentials</p>
-    </Error>
-
-        <!-- Name -->
-        <input id="name" class:invalid={!fullnameValid && touchedName} 
-            type='text'
-            name = 'fullname'
-            value = {fullname}
-            placeholder="Full Name"
-            on:input={event => (fullname = event.target.value)}
-            on:blur={() => touchedName = true}
-            />
-        {#if !fullnameValid && touchedName}
-            <p class="input-error">Cannot be empty</p>
+<Modal>
+    <div transition:scale={{duration: 500}} class="signUp">
+        <!-- Loading Spinner -->
+        {#if loading}
+        <div class="loading"><Loading/></div>  
         {/if}
+        <h3>Sign Up for free</h3>
 
-        <!-- Username  -->
-        <input id="username" class:invalid={!usernameValid && touchedUsername} 
-            type='text'
-            name = 'username'
-            value = {username}
-            placeholder="Username"
-            on:input={event => (username = event.target.value)}
-            on:blur={() => touchedUsername= true} 
-            />
-        {#if !usernameValid && touchedUsername}
-            <p class="input-error">Cannot be empty</p>
-        {/if}
+        <form on:submit|preventDefault={signUp}>
+        <Error showErr=true>
+            <p class="error-message">Missing credentials</p>
+        </Error>
 
-        <!-- Email  -->
-        <input id="email" class:invalid={!emailValid && touchedEmail} 
-            type='email'
-            name = 'email'
-            value = {email}
-            placeholder="Email"
-            on:input={event => (email = event.target.value)}
-            on:blur={() => touchedEmail = true} 
-            />
-        {#if !emailValid && touchedEmail}
-            <p class="input-error">Invalid Email</p>
-        {/if}
+            <!-- Name -->
+            <input id="name" class:invalid={!fullnameValid && touchedName} 
+                type='text'
+                name = 'fullname'
+                value = {fullname}
+                placeholder="Full Name"
+                on:input={event => (fullname = event.target.value)}
+                on:blur={() => touchedName = true}
+                />
+            {#if !fullnameValid && touchedName}
+                <p class="input-error">Cannot be empty</p>
+            {/if}
 
-        <!-- Mobile  -->
-        <input id="mobile" class:invalid={!mobileValid && touchedMobile} 
-            type='text'
-            name = 'mobile'
-            value = {mobile}
-            placeholder="Mobile Number"
-            on:input={event => (mobile = event.target.value)}
-            on:blur={() => touchedMobile = true} 
-            />
-        {#if !mobileValid && touchedMobile}
-            <p class="input-error">Invalid! Type in number without country code</p>
-        {/if}
+            <!-- Username  -->
+            <input id="username" class:invalid={!usernameValid && touchedUsername} 
+                type='text'
+                name = 'username'
+                value = {username}
+                placeholder="Username"
+                on:input={event => (username = event.target.value)}
+                on:blur={() => touchedUsername= true} 
+                />
+            {#if !usernameValid && touchedUsername}
+                <p class="input-error">Cannot be empty</p>
+            {/if}
 
-        <!-- Password  -->
-        <input id="password" class:invalid={!passwordValid && touchedPassword} 
-            type='password'
-            name = 'password'
-            value = {password}
-            placeholder="Password"
-            on:input={event => (password = event.target.value)}
-            on:blur={() => touchedPassword = true} 
-            />
-        {#if !passwordValid && touchedPassword}
-            <p class="input-error">Should be atleast 8 characters</p>
-        {/if}
-        
-        <button disabled={!formIsValid}>Submit</button>
-        <p class="switchStatement">Already registered? 
-            <span on:click={() => dispatch('switch')} class="switchModal">Sign In</span>
-        </p>
+            <!-- Email  -->
+            <input id="email" class:invalid={!emailValid && touchedEmail} 
+                type='email'
+                name = 'email'
+                value = {email}
+                placeholder="Email"
+                on:input={event => (email = event.target.value)}
+                on:blur={() => touchedEmail = true} 
+                />
+            {#if !emailValid && touchedEmail}
+                <p class="input-error">Invalid Email</p>
+            {/if}
 
-        <!-- Close Button -->
-        <div on:click={cleanUpClose} class="closeBtn">
-            <i class="fa fa-times" aria-hidden="true"></i>
-        </div>
-    </form>
-</div>
+            <!-- Mobile  -->
+            <input id="mobile" class:invalid={!mobileValid && touchedMobile} 
+                type='text'
+                name = 'mobile'
+                value = {mobile}
+                placeholder="Mobile Number"
+                on:input={event => (mobile = event.target.value)}
+                on:blur={() => touchedMobile = true} 
+                />
+            {#if !mobileValid && touchedMobile}
+                <p class="input-error">Invalid! Type in number without country code</p>
+            {/if}
+
+            <!-- Password  -->
+            <input id="password" class:invalid={!passwordValid && touchedPassword} 
+                type='password'
+                name = 'password'
+                value = {password}
+                placeholder="Password"
+                on:input={event => (password = event.target.value)}
+                on:blur={() => touchedPassword = true} 
+                />
+            {#if !passwordValid && touchedPassword}
+                <p class="input-error">Should be atleast 8 characters</p>
+            {/if}
+            
+            <button disabled={!formIsValid}>Submit</button>
+            <p class="switchStatement">Already registered? 
+                <span on:click={() => dispatch('switch')} class="switchModal">Sign In</span>
+            </p>
+
+            <!-- Close Button -->
+            <div on:click={cleanUpClose} class="closeBtn">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+        </form>
+    </div>
+</Modal>
