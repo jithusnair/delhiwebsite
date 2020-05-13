@@ -7,6 +7,58 @@
     box-sizing: border-box;
 }
 
+button {
+    border:none;
+    border-radius: 50px;
+    box-shadow: 0 2px 3px 0 rgba(91,22,170,.3);
+    -webkit-appearance:none;
+    text-align:center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 2rem;
+    padding: 1.15rem 2.7rem;
+    background-image:linear-gradient(to right,rgb(208, 55, 255),rgb(91, 72, 255),rgb(91, 72, 255),rgb(208, 55, 255));
+    background-size:300% 100%;
+    -moz-transition:all .4s ease-in-out;
+    -o-transition:all .4s ease-in-out;
+    -webkit-transition:all .4s ease-in-out;
+    transition:all .4s ease-in-out;
+}
+
+button:hover {
+    background-position:100% 0;
+    -moz-transition:all .4s ease-in-out;
+    -o-transition:all .4s ease-in-out;
+    -webkit-transition:all .4s ease-in-out;
+    transition:all .4s ease-in-out;
+}
+
+button::-moz-focus-inner {
+    border: 0;
+}
+
+input{
+    border-radius: 5px;
+    border:.21rem solid rgb(192, 182, 182);
+    height: 4rem;
+    padding-left: 20px;
+}
+
+textarea{
+    width: 100%;
+    border:.21rem solid rgb(192, 182, 182);
+    resize: none;
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-top: 2rem;
+}
+
+input:focus{
+    border:.21rem solid #3D0CFF;
+    outline: none;
+}
+
 :root{
     --text:#616161;
     --heading:#425066;
@@ -42,7 +94,10 @@ h1,h2,h3,h4,h5,h6,.btn{
 p,a,li,button{
     font-size: 1.6rem;
     line-height: 2.6rem;
-    color:var(--text);
+}
+
+p, a, li {
+    color: var(--text);
 }
 
 button{
