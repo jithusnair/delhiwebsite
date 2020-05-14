@@ -4,15 +4,23 @@
     import Login from '../components/signinandup/Login.svelte';
     import SignUpResults from '../components/signinandup/SignUpResults.svelte';
     import ForgotEmail from '../components/signinandup/ForgotEmail.svelte';
+    import ForgotToken from '../components/signinandup/ForgotToken.svelte';
     
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher()
 
     export let displayLogIn = false;
-    export let displaySignUp = false;
     
-    let displayForgot = false;
+    
+    let displayForgotEmail = false;
+    let displayForgotToken = false;
+    let displayForgotSuccess = false;
+    let forgotemailsuccess;
+    let forgottokensuccess;
+    
+
+    export let displaySignUp = false;
 
     let displaySignUpResults = false;
     let signUpResults;
@@ -25,7 +33,7 @@
     on:signupopen
     on:loginclose
     on:forgotopen = {()=> {
-            displayForgot = true;
+            displayForgotEmail = true;
         }
     }
 />
@@ -48,6 +56,22 @@
 />
 
 <ForgotEmail
-    display = {displayForgot}
-    on:forgotclose={() => displayForgot = false}
+    display = {displayForgotEmail}
+    on:forgotclose={() => displayForgotEmail = false}
+    on:forgotemailsuccess = {(event) => {
+        forgotemailsuccess = event.detail.text;
+        displayForgotToken = true;
+        }
+    }
+/>
+
+<ForgotToken
+    {forgotemailsuccess}
+    display = {displayForgotToken}
+    on:forgotclose={() => displayForgotToken = false}
+    on:forgottokensuccess = {(event) => {
+        forgottokensuccess = event.detail.text;
+        displayForgotSuccess = true;
+        }
+    }
 />
