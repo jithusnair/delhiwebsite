@@ -17,6 +17,12 @@
 
     let loginErr = '';
 
+    $:  if(loginErr) {
+            setTimeout(() => {
+                loginErr = false;
+            }, 2000);
+        }
+
     let loading = false;
 
     export let display = false;

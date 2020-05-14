@@ -25,6 +25,13 @@
     let touchedPassword = false;
 
     let signUpErr = '';
+
+    $:  if(signUpErr) {
+        setTimeout(() => {
+            signUpErr = false;
+        }, 2000);
+    }
+
     let signUpResult = '';
 
     // FIND A MORE ELEGANT SOLUTION THAN THIS
