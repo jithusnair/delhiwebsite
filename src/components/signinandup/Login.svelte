@@ -159,7 +159,7 @@
 <Modal displayModal={display}>
     <!-- Loading Spinner -->
     {#if loading}
-    <div class="loading"><Loading/></div>  
+        <div class="loading"><Loading/></div>  
     {/if}
     <!-- Login Part -->
     <div transition:scale={{duration: 500}} class="signIn">
@@ -172,7 +172,15 @@
             <!-- {/if} -->
             <input bind:value={loginUsername} id="username" type="text" name="username" placeholder="Username">
             <input bind:value={loginPassword} id='password' type="password" name='password' placeholder="Password">
-            <p class="forgot" on:click={()=> dispatch('forgot')}>Forgot password?</p>
+            <p class="forgot" 
+                on:click={()=> {
+                        cleanUpClose();
+                        dispatch('forgotopen');
+                    }
+                }
+            >
+                Forgot password?
+            </p>
             <button id="loginBtn">Log In</button>
             <div on:click={cleanUpClose} class="closeBtn">
                 <i class="fa fa-times" aria-hidden="true"></i>
