@@ -143,6 +143,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        padding: 0 10px;
         width: 300px;
         position: fixed;
         top: 50%;
