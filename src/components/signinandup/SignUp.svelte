@@ -216,11 +216,11 @@
         {/if}
         <h3>Sign Up for free</h3>
 
-        <form on:submit|preventDefault={signUp}>
-
         <Error showErr={signUpErr? true: false}>
-                <p class="error-message">{signUpErr}</p>
+            <p class="error-message">{signUpErr}</p>
         </Error>
+
+        <form on:submit|preventDefault={signUp}>
 
             <!-- Name -->
             <input id="name" class:invalid={!fullnameValid && touchedName} 
