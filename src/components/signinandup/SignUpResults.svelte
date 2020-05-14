@@ -3,12 +3,15 @@
 
     import { scale } from 'svelte/transition';
     import { createEventDispatcher } from 'svelte';
+    import { stores } from '@sapper/app';
+
+    const { session } = stores();
 
     const dispatch = createEventDispatcher();
     
     export let display;
 
-    export let signUpResult;
+    export let signUpResults;
 </script>
 
 <style>
@@ -43,11 +46,11 @@
 <Modal displayModal={display}>
     <div transition:scale={{duration: 500}} class="signUpResult">
         <p>
-        {signUpResult}
+        {signUpResults.msg}
         </p>
         <button 
         on:click = {() => {
-            //session.set(signUpSession); 
+            session.set(signUpResults.session); 
             dispatch('signupcomplete');
             }}
             >

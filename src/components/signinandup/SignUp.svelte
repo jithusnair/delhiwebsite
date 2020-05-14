@@ -84,7 +84,6 @@
                 else if (data.success && data.signUpResult) {
                     signUpResult = data.signUpResult;
                     signUpFinish();
-                    mode = 2;
                 }
             })
             .catch((error) => {
@@ -107,6 +106,8 @@
             .then(response => response.json())
             .then(data => {
                 signUpSession = {user:{...data.user}};
+                cleanUpClose();
+                dispatch('signupsuccess', {session: signUpSession, msg:data.signUpResult});
             })
             .catch((error) => {
             console.error('Error:', error);
@@ -211,7 +212,7 @@
     <div transition:scale={{duration: 500}} class="signUp">
         <!-- Loading Spinner -->
         {#if loading}
-        <div class="loading"><Loading/></div>  
+            <div class="loading"><Loading/></div>  
         {/if}
         <h3>Sign Up for free</h3>
 
