@@ -107,7 +107,7 @@
             .then(data => {
                 signUpSession = {user:{...data.user}};
                 cleanUpClose();
-                dispatch('signupsuccess', {session: signUpSession, msg:data.signUpResult});
+                dispatch('signupsuccess', {session: signUpSession, msg:signUpResult});
             })
             .catch((error) => {
             console.error('Error:', error);
