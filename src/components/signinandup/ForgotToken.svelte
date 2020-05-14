@@ -19,7 +19,7 @@
             }, 2000);
         }
 
-    export let forgotemailsuccess;
+    export let forgotEmailSuccess;
 
     export let display = false;
 
@@ -33,7 +33,7 @@
 
     function forgotToken() {
         loading = true;
-        let data = {email: forgotPassEmail, token: forgotPassToken};
+        let data = {email: forgotEmailSuccess.forgotPassEmail, token: forgotPassToken};
 
         fetch('user/account/forgottoken', {
             method: 'POST',
@@ -165,9 +165,9 @@
                 on:input={event => (forgotPassToken = event.target.value)}
                 />
             <button>Next</button>
-            {#if true}
-                <p class="success">{forgotemailsuccess}</p>
-            {/if}
+            
+            <p class="success">{forgotEmailSuccess.msg}</p>
+
             <div on:click={cleanUpClose} class="closeBtn">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </div>

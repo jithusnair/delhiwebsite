@@ -48,8 +48,13 @@
             })
             .then(data => {
                 if(data.success) {
+                    let email = forgotPassEmail;
                     cleanUpClose();
-                    dispatch('forgotemailsuccess', data.msg);
+                    dispatch('forgotemailsuccess', 
+                        {
+                            forgotPassEmail: email, 
+                            msg:data.msg
+                        });
                 }
                 else if(!data.success) {
                     forgotPassEmailErr = data.err;
