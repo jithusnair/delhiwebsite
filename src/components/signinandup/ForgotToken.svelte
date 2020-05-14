@@ -13,6 +13,12 @@
 
     let forgotPassTokenErr = '';
 
+    $:  if(forgotPassTokenErr) {
+            setTimeout(() => {
+                forgotPassTokenErr = false;
+            }, 2000);
+        }
+
     export let forgotemailsuccess;
 
     export let display = false;
