@@ -217,8 +217,9 @@
         <h3>Sign Up for free</h3>
 
         <form on:submit|preventDefault={signUp}>
-        <Error showErr=true>
-            <p class="error-message">Missing credentials</p>
+
+        <Error showErr={signUpErr? true: false}>
+                <p class="error-message">{signUpErr}</p>
         </Error>
 
             <!-- Name -->
