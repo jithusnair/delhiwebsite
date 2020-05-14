@@ -2,12 +2,6 @@
     import { fade } from 'svelte/transition';
 
     export let showErr = false;
-
-    $:  if(showErr) {
-        setTimeout(() => {
-            showErr = false;
-        }, 2000);
-    }
 </script>
 
 <style>
