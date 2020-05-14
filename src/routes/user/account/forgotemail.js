@@ -61,7 +61,7 @@ export async function post(req, res, next) {
                     else {
                         message = { 
                             success: true, 
-                            msg: `A token code has been sent to ${user.email}.
+                            msg: `A token code has been sent to ${user.email}. <br>
                             Type the code in to reset password.` 
                         }; 
                     }
