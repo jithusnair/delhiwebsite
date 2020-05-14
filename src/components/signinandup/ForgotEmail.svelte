@@ -12,7 +12,6 @@
     let forgotPassEmail = '';
 
     let forgotPassEmailErr = '';
-    let forgotPassEmailSuccess = '';
 
     export let display = false;
 
@@ -20,7 +19,6 @@
 
     function cleanUpClose () {
         forgotPassEmail = '';
-        forgotPassEmailSuccess = false;
         forgotPassEmailErr = '';
         dispatch('forgotclose');
     }
@@ -44,8 +42,8 @@
             })
             .then(data => {
                 if(data.success) {
-                    forgotPassEmailSuccess = data.msg;
-                    forgotMode = 1;
+                    cleanUpClose();
+                    dispatch('forgotemailsuccess', data.msg);
                 }
                 else if(!data.success) {
                     forgotPassEmailErr = data.err;
@@ -71,14 +69,19 @@
 
     .forgotPassword {
         width: 300px;
+        padding: 0 10px 0 10px;
         position: fixed;
         top: 50%;
         left: 50%;
         background-color: white;
-        height: 230px;
+        height: 250px;
         transform: translate(-50%, -50%);
         border-radius: 2rem;
         z-index: 1003;
+    }
+
+    input {
+        margin-top: 1rem;
     }
 
     .forgotPassword form {
@@ -109,6 +112,11 @@
         margin-top: 1rem;
     }
 
+    .forgotPassword div .error-message {
+        font-size: 1rem;
+        margin:0;
+    }
+
     .closeBtn {
         position: absolute;
         top: 1.5rem;
@@ -127,9 +135,9 @@
         {/if}
         <form on:submit|preventDefault={forgotEmail}>
             <p><strong>Please provide your email</strong></p>
-            {#if forgotPassEmailErr}
+            <Error showErr={forgotPassEmailErr? true: false}>
                 <p class="error-message">{forgotPassEmailErr}</p>
-            {/if}
+            </Error>
             <input
                 type='email'
                 value = {forgotPassEmail}
