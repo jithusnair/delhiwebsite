@@ -76,7 +76,7 @@ export async function post(req, res, next) {
                                     else {
                                         message = { 
                                             success: true, 
-                                            msg: `Successfully changed password.
+                                            msg: `Successfully changed password. <br>
                                             The new password has been sent to ${user.email}` 
                                         }; 
                                     }
