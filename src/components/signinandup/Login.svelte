@@ -20,7 +20,7 @@
     $:  if(loginErr) {
             setTimeout(() => {
                 loginErr = false;
-            }, 2000);
+            }, 5000);
         }
 
     let loading = false;
@@ -52,6 +52,9 @@
                 }
                 else if (data.loginErr) {
                     loginErr = data.loginErr;
+                }
+                else if (data.serverErr) {
+                    loginErr = 'Something went wrong on our end! Please try again later';
                 }
             })
             .catch((error) => {
