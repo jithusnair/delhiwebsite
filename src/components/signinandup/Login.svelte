@@ -20,7 +20,7 @@
     $:  if(loginErr) {
             setTimeout(() => {
                 loginErr = false;
-            }, 5000);
+            }, 10000);
         }
 
     let loading = false;
