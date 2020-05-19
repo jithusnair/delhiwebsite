@@ -11,79 +11,107 @@ export async function post(req, res, next) {
         mobile: req.body.mobile,
     };
 
-    User.findOne({ email: req.body.email}, function (err, docs){
-        if(err) {}
-        else {
+    let message;
+    
+    // Find user based on given email.
+    User.findOne({ email: req.body.email}).exec()
+        .then((docs) => {
+            // if user with given email exists send error
             if(docs) {
-                let message = { success: false, signUpErr: 'Given email address already exist' };
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(message));
+                var e = new Error('Email address already exists'); // e.name is 'Error'
+                e.name = 'EmailError';
+                throw e;
             }
-            else {
-                User.register(user, req.body.password, function(err, user){
-                    if(err){
-                        let message = { success: false, signUpErr: err }
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(message));
-                    }
-                    else {
-                        let randomToken = generator.generate({
-                            length: 10,
-                            numbers: true,
-                            uppercase: true,
-                            lowercase: true,
-                            symbols: true
-                        });
-                        let token = new Token({ _userId: user._id, token: randomToken });
-                    
-                        // Save the verification token
-                        token.save(function (err) {
-                            if (err) { return res.status(500).send({ msg: err.message }); }
-                    
-                            // Send the email
-                            var transporter = nodemailer.createTransport(
-                                { 
-                                    service: 'gmail', 
-                                    auth: { user: 'nairjithus@gmail.com', pass: 'qnwxvnvdzjitidnn' } 
-                                });
-                            
-                            let email_html = `Hello,
-                            Please verify your account. The verification code is ${token.token}`;
-
-                            var mailOptions = { 
-                                from: 'no-reply@webapplication.com', 
-                                to: user.email, 
-                                subject: 'Account Verification', 
-                                text: email_html
-                            };
-                            
-                            transporter.sendMail(mailOptions, function (err) {
-                                if (err) { 
-                                    let message = { 
-                                        success: false, 
-                                        signUpResult: `You have been registered but we were unable to send an email for verification.
-                                        Try again through the profile settings after logging in. <br><br>
-                                        You cannot buy or use our services to the fullest extent until the verification is complete.
-                                        This is for security reasons, we are sorry for the inconvenience caused. <br>`
-                                    }
-                                    res.setHeader('Content-Type', 'application/json');
-                                    res.end(JSON.stringify(message)); 
-                                }
-                                else {
-                                    let message = { 
-                                        success: true, 
-                                        signUpResult: 'A verification code has been sent to ' + user.email + 
-                                        '. Please verify the code in profile settings after logging in.' + 
-                                        'The code will be valid for only 12 hrs.' 
-                                    };
-                                    res.setHeader('Content-Type', 'application/json');
-                                    res.end(JSON.stringify(message));
-                                }
-                            });
-                        });
-                    }
+            else return
+        })
+        // If no user with given email is found try to register the new user
+        .then(() => User.register(user, req.body.password))
+        // If no errors proceeds to generate token 
+        .then((user) => {
+            let randomToken = generator.generate({
+                length: 10,
+                numbers: true,
+                uppercase: true,
+                lowercase: true,
+                symbols: true
+            });
+            let token = new Token({ _userId: user._id, token: randomToken });
+            return token.save();
+        })
+        // Send e-mail with the generated token
+        // Email is too simple as of now.
+        // Better email templating with custom domain would be better
+        // Use SENDGRID in the end to make emails better.
+        .then((token) => {
+            var transporter = nodemailer.createTransport(
+                { 
+                    service: 'gmail', 
+                    auth: { user: process.env.USERNAME, pass: process.env.PASSWORD } 
                 });
+            let email_html = 
+                `Hello,
+                Please verify your account. The verification code is ${token.token}`;
+
+            var mailOptions = { 
+                from: 'no-reply@webapplication.com', 
+                to: user.email, 
+                subject: 'Account Verification', 
+                text: email_html
+            };
+            transporter.sendMail(mailOptions, function (err) {
+                if (err) { 
+                    message = { 
+                        success: false, 
+                        signUpResult: 
+                        `You have been registered but we were unable to send an email for verification.
+                        Try again through the profile settings after logging in. <br><br>
+                        You cannot buy or use our services to the fullest extent until the verification is complete.
+                        This is for security reasons, we are sorry for the inconvenience caused. <br>`
+                    }
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(message)); 
+                }
+                else {
+                    message = { 
+                        success: true, 
+                        signUpResult: 
+                        'A verification code has been sent to ' + user.email + 
+                        '. Please verify the code in profile settings after logging in.' + 
+                        'The code will be valid for only 12 hrs.' 
+                    };
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(message));
+                }
+            });
+        })
+        .catch((err) => {
+            // Isolate user.register errors and send that to front end.
+            if(err.name == 'UserExistsError' || err.name == 'MissingUsernameError')
+            {
+                message = { 
+                    success: false, 
+                    signUpErr: err
+                };
             }
-        }
-    });
+            else if(err.name == 'EmailError') {
+                message = { 
+                    success: false, 
+                    signUpErr: err.message 
+                };
+            }
+            // Else error in some other async operations
+            // Probably should log this error somewhere
+            else {
+                console.log(err);
+                message = { 
+                    success: false, 
+                    serverErr: 
+                    `Something went wrong on our end! 
+                    You may already been signed up in our database in which case try logging in.
+                    If that does not work, try signing up a after a while.`
+                };
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(message));
+        })
 }
