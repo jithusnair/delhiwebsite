@@ -1,11 +1,15 @@
 import passport from 'passport';
 
 // Log In
-// ****NOTE****
+// ****NOTES****
+// 1)
 // Sending response is quite boilerplaty.
 // An async await/promise system might be better,
 // but currently not enough time to figure out how to
 // promisify passport.authenticate()
+// 2)
+// Server Errors should be logged and when it occurs a
+// noticiation should be sent out.
 export async function post(req, res, next) {
     let message;
     passport.authenticate('local', function(err, user, info) {
