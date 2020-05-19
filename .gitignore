@@ -7,3 +7,4 @@ yarn-error.log
 /cypress/
 /cypress.json
 /rollup.config.js
+/.env
