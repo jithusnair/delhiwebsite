@@ -29,7 +29,7 @@
     $:  if(signUpErr) {
         setTimeout(() => {
             signUpErr = false;
-        }, 2000);
+        }, 10000);
     }
 
     let signUpResult = '';
@@ -53,6 +53,7 @@
     $: usernameValid = isEmpty(username)
     $: formIsValid =
         fullnameValid &&
+        usernameValid &&
         emailValid &&
         mobileValid &&
         passwordValid;
@@ -91,6 +92,11 @@
                 else if (data.success && data.signUpResult) {
                     signUpResult = data.signUpResult;
                     signUpFinish();
+                }
+                // for now just display on the modal itself.
+                // Maybe later a better alert/snackbar/something else can be shown
+                else if (data.serverErr) {
+                    signUpErr = data.serverErr;
                 }
             })
             .catch((error) => {
