@@ -4,7 +4,6 @@ import * as sapper from '@sapper/server';
 import mongoose from 'mongoose';
 import User from './_db/user';
 import passport from 'passport';
-import localStrategy from 'passport-local';
 import bodyParser from 'body-parser';
 
 const { PORT, NODE_ENV } = process.env;
@@ -27,7 +26,7 @@ app.use(require('express-session')({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new localStrategy(User.authenticate()));
+passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
