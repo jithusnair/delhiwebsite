@@ -59,7 +59,7 @@ export async function post(req, res, next) {
                 text: email_html
             };
             transporter.sendMail(mailOptions, function (err) {
-                if (err) { 
+                if (err) {
                     message = { 
                         success: false, 
                         signUpResult: 
@@ -90,7 +90,7 @@ export async function post(req, res, next) {
             {
                 message = { 
                     success: false, 
-                    signUpErr: err
+                    signUpErr: err.message
                 };
             }
             else if(err.name == 'EmailError') {
