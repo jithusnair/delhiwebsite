@@ -36,8 +36,8 @@ export async function post(req, res, next) {
                         username: tar.fullname,
                         fullname: tar.fullname,
                         isVerified: tar.isVerified,
+                        isAdmin: tar.isAdmin
                     };
-        
                     message = { success: true, user: user };
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify(message));

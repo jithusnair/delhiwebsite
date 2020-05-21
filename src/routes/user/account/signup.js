@@ -38,6 +38,7 @@ export async function post(req, res, next) {
                 username: tar.fullname,
                 fullname: tar.fullname,
                 isVerified: tar.isVerified,
+                isAdmin: tar.isAdmin
             };
 
             let randomToken = generator.generate({
