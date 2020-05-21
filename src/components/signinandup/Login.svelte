@@ -2,6 +2,8 @@
     import Modal from '../ui/Modal.svelte';
     import Loading from '../ui/Loading.svelte';
     import Error from '../ui/Error.svelte';
+
+    import { fetchWithTimeout } from '../../_helpers/fetchWithTimeout.js';
     
     import { scale } from 'svelte/transition';
     
@@ -31,7 +33,7 @@
         loading = true;
         let data = {username: loginUsername, password: loginPassword};
 
-        fetch('user/account/loginlogout', {
+        fetchWithTimeout('user/account/loginlogout', {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -39,7 +41,8 @@
             },
             credentials: 'include', 
             body: JSON.stringify(data),
-            })
+            },
+            10000)
             .then(response => {
                 loading = false;
                 return response.json()
@@ -58,7 +61,13 @@
                 }
             })
             .catch((error) => {
-            console.error('Error:', error);
+                if (error.name === 'AbortError') {
+                    loading = false;
+                    loginErr = 'Server taking too long to respond! Request Timed out';
+                }
+                else {
+                    console.error('Error:', error);
+                }
             });
     }
 
