@@ -56,8 +56,11 @@
                             msg:data.msg
                         });
                 }
-                else if(!data.success) {
+                else if(!data.success && data.err) {
                     forgotPassEmailErr = data.err;
+                }
+                else if(!data.success && data.serverErr) {
+                    forgotPassEmailErr = data.serverErr;
                 }
             })
             .catch((error) => {

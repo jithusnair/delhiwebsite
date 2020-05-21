@@ -53,8 +53,11 @@
                     cleanUpClose();
                     dispatch('forgottokensuccess', data.msg);
                 }
-                else if(!data.success) {
+                else if(!data.success && data.err) {
                     forgotPassTokenErr = data.err;
+                }
+                else if(!data.success && data.serverErr) {
+                    forgotPassTokenErr = data.serverErr;
                 }
             })
             .catch((error) => {
