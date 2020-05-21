@@ -35,8 +35,8 @@
         })
         .then(data => {
             if(data.success) {
-                session.set({user:{...data.user}});
                 goto('/admin/dashboard');
+                session.set({user:{...data.user}});
             }
             else if (data.loginErr) {
                 errorMsg = data.loginErr;
