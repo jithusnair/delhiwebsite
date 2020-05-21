@@ -12,6 +12,8 @@ export async function post(req, res, next) {
     };
 
     let message;
+
+    let session;
     
     // Find user based on given email.
     User.findOne({ email: req.body.email}).exec()
@@ -28,6 +30,16 @@ export async function post(req, res, next) {
         .then(() => User.register(user, req.body.password))
         // If no errors proceeds to generate token 
         .then((user) => {
+            // login the registered user
+            req.login(user, function(err) {});
+            let tar = JSON.parse(JSON.stringify(req.user))
+            session = {
+                _id: tar._id.toString(), 
+                username: tar.fullname,
+                fullname: tar.fullname,
+                isVerified: tar.isVerified,
+            };
+
             let randomToken = generator.generate({
                 length: 10,
                 numbers: true,
@@ -60,13 +72,14 @@ export async function post(req, res, next) {
             };
             transporter.sendMail(mailOptions, function (err) {
                 if (err) {
+                    console.log(err);
                     message = { 
                         success: false, 
                         signUpResult: 
-                        `You have been registered but we were unable to send an email for verification.
-                        Try again through the profile settings after logging in. <br><br>
-                        You cannot buy or use our services to the fullest extent until the verification is complete.
-                        This is for security reasons, we are sorry for the inconvenience caused. <br>`
+                        `Sorry! Something went wrong on our end!
+                        You have been registered but we were unable to send an email for verification.
+                        Try verifying through profile settings.`,
+                        session: session
                     }
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify(message)); 
@@ -77,7 +90,8 @@ export async function post(req, res, next) {
                         signUpResult: 
                         'A verification code has been sent to ' + user.email + 
                         '. Please verify the code in profile settings after logging in.' + 
-                        'The code will be valid for only 12 hrs.' 
+                        'The code will be valid for only 12 hrs.',
+                        session: session
                     };
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify(message));
@@ -107,8 +121,8 @@ export async function post(req, res, next) {
                     success: false, 
                     serverErr: 
                     `Something went wrong on our end! 
-                    You may already been signed up in our database in which case try logging in.
-                    If that does not work, try signing up a after a while.`
+                    You may have already been signed up in our database in which case try logging in.
+                    If that does not work, try signing up a after sometime.`
                 };
             }
             res.setHeader('Content-Type', 'application/json');
