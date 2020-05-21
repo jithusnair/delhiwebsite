@@ -45,3 +45,10 @@ export async function post(req, res, next) {
 
 	
 }
+
+export async function get(req, res, next) {
+    req.logout();
+    let message = {success: true, user:null};
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(message));
+}
