@@ -1,10 +1,7 @@
 <script>
     import { scale } from 'svelte/transition';
 
-    export let data = {
-        courseTitle: 'Jaba',
-        features: ['Jaba', 'Jaba']
-    };
+    export let data;
 </script>
 
 <style>
@@ -63,10 +60,10 @@
         line-height: 2.6rem;
     }
 
-    h2 {
+    h3 {
         position: relative;
         text-align: center;
-        margin: 0 auto 1rem auto;
+        margin: 0 auto;
     }
 </style>
 
@@ -75,9 +72,7 @@
         <img src="/images/cards/thumbnail.png" alt="">
         <div class="content">
             {#if data.courseTitle}
-                <h2>{data.courseTitle}</h2>
-            {:else}
-                <h2>No Title Given</h2>
+                <h3>{data.courseTitle}</h3>
             {/if}
             <div class="plan-features">
             {#each data.features as feature}
