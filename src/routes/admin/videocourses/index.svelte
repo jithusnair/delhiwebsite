@@ -31,10 +31,22 @@
 	}
 </style>
 
+<svelte:head>
+    <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</svelte:head>
+
 <div class="topContainer">
 	<div class="lefthalf">
-		<h1>Online Courses</h1>
-		<CourseNewAndEdit/>
+		<h1>New Course</h1>
+		<CourseNewAndEdit
+            on:save={()=>{
+                data = null;
+                //Also getCourses from DB once that component is connected
+            }}
+            on:inputChange={(event) => data = event.detail}
+        />
 	</div>
 
 	<div class="righthalf">
@@ -44,5 +56,3 @@
 		</div>
 	</div>
 </div>
-
-
