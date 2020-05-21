@@ -1,6 +1,7 @@
 <script>
     import { isEmpty, isSecure, isMobile, isValidEmail } from "../../_helpers/validation.js";
-    
+    import { fetchWithTimeout } from '../../_helpers/fetchWithTimeout.js';
+
     import Modal from '../ui/Modal.svelte';
     import Loading from '../ui/Loading.svelte';
     import Error from '../ui/Error.svelte';
@@ -68,7 +69,7 @@
                     mobile: mobile,
                 };
 
-        fetch('user/account/signup', {
+        fetchWithTimeout('user/account/signup', {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -76,7 +77,8 @@
             },
             credentials: 'include', 
             body: JSON.stringify(data),
-            })
+            },
+            10000)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network failed');
@@ -86,12 +88,13 @@
             })
             .then(data => {
                 if (data.signUpErr) {
-                    if(data.signUpErr.message) {signUpErr = data.signUpErr.message}
-                    else {signUpErr = data.signUpErr}
+                    signUpErr = data.signUpErr
                 }
-                else if (data.success && data.signUpResult) {
+                else if (data.signUpResult) {
                     signUpResult = data.signUpResult;
-                    signUpFinish();
+                    signUpSession = {user:{...data.session}};
+                    cleanUpClose();
+                    dispatch('signupsuccess', {session: signUpSession, msg:signUpResult});
                 }
                 // for now just display on the modal itself.
                 // Maybe later a better alert/snackbar/something else can be shown
@@ -100,31 +103,12 @@
                 }
             })
             .catch((error) => {
-            console.error('Error:', error);
+                if (error.name === 'AbortError') {
+                    loading = false;
+                    loginErr = 'Server taking too long to respond! Request Timed out';
+                }
+                console.error('Error:', error);
             });
-    }
-
-    function signUpFinish() {
-        let data = {username: username, password: password};
-
-        fetch('user/account/loginlogout', {
-            method: 'POST',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', 
-            body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(data => {
-                signUpSession = {user:{...data.user}};
-                cleanUpClose();
-                dispatch('signupsuccess', {session: signUpSession, msg:signUpResult});
-            })
-            .catch((error) => {
-            console.error('Error:', error);
-            }); 
     }
 
     function cleanUpClose () {
@@ -225,6 +209,7 @@
 
     .error-message {
         font-size: 1rem;
+        line-height: 1rem;
     }
 
     .input-error {
