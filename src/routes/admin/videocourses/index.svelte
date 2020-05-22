@@ -1,8 +1,51 @@
 <script>
     import PreviewCard from '../../../components/admin/video/PreviewCard.svelte';
     import CourseNewAndEdit from '../../../components/admin/video/CourseNewAndEdit.svelte';
+	import CardsAdmin from '../../../components/admin/video/CardsAdmin.svelte';
 
-    let data;
+    import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
+    
+    import { onMount } from 'svelte';
+
+	onMount(() => {
+		getCourses();
+    });
+    
+	let previewData;
+	
+	let dbCourseData;
+
+	let course
+
+    function getCourses() {
+		fetchWithTimeout('/admin/videocourses/videoCRUD', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', 
+        },
+        10000)
+        .then(response => {
+
+			return response.json()
+		})
+        .then(data => {
+            if(data.success) {
+				dbCourseData = data.data;
+            }
+            else if (data.err) {
+                errorMsg = data.loginErr;
+            }
+        })
+        .catch((error) => {
+            if (error.name === 'AbortError') {
+                loading = false;
+                errorMsg = 'Server taking too long to respond! Request timed out';
+            }
+            console.error('Error:', error);
+        });
+	}
 </script>
 
 <style>
@@ -42,17 +85,27 @@
 		<h1>New Course</h1>
 		<CourseNewAndEdit
             on:save={()=>{
-                data = null;
-                //Also getCourses from DB once that component is connected
+                previewData = null;
+                getCourses();
             }}
-            on:inputChange={(event) => data = event.detail}
+            on:inputChange={(event) => previewData = event.detail}
         />
 	</div>
 
 	<div class="righthalf">
 		<h1>Preview</h1>
 		<div>
-			<PreviewCard {data}/>
+			<PreviewCard data={previewData}/>
 		</div>
 	</div>
+</div>
+<div class="bottomContainer">
+	<h1>Courses in Database</h1>
+	<!-- {#if loadingCards}
+		<Loading/>
+	{/if} -->
+	<CardsAdmin
+		docs = {dbCourseData}
+		on:reloadData={getCourses}
+	/>
 </div>
