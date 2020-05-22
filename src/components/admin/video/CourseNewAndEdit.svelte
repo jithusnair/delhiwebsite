@@ -1,29 +1,67 @@
 <script>
-    import Loading from '../../ui/Loading.svelte';
+    import SaveIndicator from '../../ui/SaveIndicator.svelte';
+    import Error from '../../ui/Error.svelte';
 
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
 
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
+
+    export let editData = false;
+    
+    let id; 
+
     let courseTitle = '';
 	let feature1 = '';
-	let feature2 = '';
+	let feature2 = ''; 
 	let feature3 = '';
 	let feature4 = '';
     let feature5 = '';
 
-    let loading = false;
+    let saving = false;
 
     let data;
+
+    if(editData) {
+        data = Object.assign({}, editData);
+        id = data._id;
+        courseTitle = data.courseTitle;
+        feature1 = data.features[0];
+        feature2 = data.features[1];
+        feature3 = data.features[2];
+        feature4 = data.features[3];
+        feature5 = data.features[4];
+    }
     
+    let saveError;
+    
+    $:  if(saveError) {
+            setTimeout(() => {
+                saveError = false;
+            }, 10000);
+        }
+
     function onChange() {
-		data = {
-			courseTitle: courseTitle,
-			features: [feature1, feature2, feature3, feature4, feature5]
-		}
+        if(editData) {
+            data = {
+                _id: id,
+                courseTitle: courseTitle,
+                features: [feature1, feature2, feature3, feature4, feature5]
+            }
+        }
+        else {
+            data = {
+                courseTitle: courseTitle,
+                features: [feature1, feature2, feature3, feature4, feature5]
+            }
+            dispatch('inputChange', data);
+        }
     }
     
     function save() {
-		loading = true;
-		fetchWithTimeout('/admin/videoCRUD', {
+		saving = true;
+		fetchWithTimeout('/admin/videocourses/videoCRUD', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,22 +71,22 @@
         },
         10000)
         .then(response => {
-			loading = false;
+			saving = false;
 			return response.json();
 		})
         .then(data => {
             if(data.success) {
-				cleanUp();
-				getCourses();
+                cleanUp();
+                dispatch('save')
             }
             else if (data.err) {
-                // HANDLE ERROR PROPERLY
+                saveError = data.err;
             }
         })
         .catch((error) => {
             if (error.name === 'AbortError') {
-                loading = false;
-                errorMsg = 'Server taking too long to respond! Request timed out';
+                saving = false;
+                saveError = 'Server taking too long to respond! Request timed out';
             }
             console.error('Error:', error);
         });
@@ -62,12 +100,87 @@
         feature4 = '';
         feature5 = '';
     }
+
+    function updateCourse() {
+        fetchWithTimeout('/admin/videocourses/videoCRUD', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', 
+            body: JSON.stringify(data),
+        },
+        10000)
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                cleanUp();
+                dispatch('editSuccess');
+                dispatch('close');
+            }
+            else if (data.err) {
+                saveError = data.err;
+            }
+            else if (data.serverErr) {
+                saveError = data.serverErr;
+            }
+        })
+        .catch((error) => {
+            if (error.name === 'AbortError') {
+                saveError = 'Server taking too long to respond! Request timed out';
+            }
+            console.error('Error:', error);
+        });
+    }
+
+    function cancel() {
+        dispatch('close');
+        cleanUp();
+    }
+
 </script>
 
 <style>
+    #ok {
+        margin: 1rem;
+        width: 100px;
+        text-align:center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        padding: 1.15rem 2.7rem;
+        background: #3D0CFF;
+        border: none;
+        border-radius: 5px;
+        box-shadow: none;
+        cursor: pointer;
+        outline: 0;
+    }
+
+    #cancel {
+        margin: 1rem;
+        width: 100px;
+        text-align:center;
+        color: black;
+        font-size: 1.5rem;
+        font-weight: 700;
+        padding: 1.15rem 2.7rem;
+        background: white;
+        border: none;
+        border-radius: 5px;
+        box-shadow: none;
+        cursor: pointer;
+        outline: 0;
+    }
+
+    #cancel:hover {
+        background: #3D0CFF;
+        color: white;
+    }
+
     .new-course-input {
 		text-align: left;
-		margin: 5rem;
+		margin: 2rem 5rem 5rem 5rem;
 	}
 
     .feature-input {
@@ -82,9 +195,25 @@
 	#courseTitle, #courseTitleInput {
 		margin-bottom: 1rem
 	}
+
+    .saving {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .error-message {
+        font-size: 1.2rem;
+    }
+
+    #featuresTitle {
+        margin-top: 1rem;
+    }
 </style>
 
 <div class="new-course-input">
+    <Error showErr={saveError? true: false}>
+        <p class="error-message">{saveError}</p>
+    </Error>
     <h3 id="courseTitle">Course Title</h3>
     <input 
         bind:value = {courseTitle}
@@ -92,7 +221,7 @@
         id="courseTitleInput" 
         type="text"
         placeholder="Type in the course Title">
-    <h3>Add features</h3>
+    <h3 id="featuresTitle">Add features</h3>
     <div class="feature-input">
         <label for="feature1">Feature 1:</label>
         <input 
@@ -143,10 +272,17 @@
             placeholder="Type in feature number 5"
         >
     </div>
-    <button on:click={save}>Save To Database</button>
-    {#if loading}
-        <div>
-            <Loading/>
+    {#if editData}
+        <div class="btns">
+            <button on:click={updateCourse} id="ok">Ok</button>
+            <button on:click={cancel} id="cancel">Cancel</button>
+        </div>
+    {:else}
+        <div class="saving">
+            <button on:click={save}>Save To Database</button>
+            {#if saving}
+                <SaveIndicator/>
+            {/if}
         </div>
     {/if}
 </div>
