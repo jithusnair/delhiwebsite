@@ -14,6 +14,12 @@
 
     let errorMsg = '';
 
+     $:  if(errorMsg) {
+            setTimeout(() => {
+                errorMsg = false;
+            }, 10000);
+        }
+
     let loading = false;
 
     function login() {
@@ -65,10 +71,6 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-    }
-    
-    h2 {
-        text-align: center;
     }
     
     form {
