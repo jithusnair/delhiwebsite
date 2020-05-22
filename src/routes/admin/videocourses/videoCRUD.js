@@ -21,10 +21,8 @@ export async function post(req, res, next) {
                     success: true, 
                     msg: 'Course detail has been saved'
                 };
-                setTimeout(()=>{
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(message));
-                }, 5000)
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(message));
             })
             .catch((error) => {
                 console.log(error);
@@ -70,23 +68,25 @@ export async function del(req, res, next) {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
     }
-    Video.findByIdAndRemove(req.body._id).exec()
-        .then(()=>{
-            message = {success: true};
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(message));
-        })
-        .catch((error) => {
-            console.log(error);
-            message = { 
-                success: false, 
-                serverErr: 
-                `Something went wrong on our end! 
-                Please try again later.`
-            };
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(message));
-        })           
+    else {
+        Video.findByIdAndRemove(req.body._id).exec()
+            .then(()=>{
+                message = {success: true};
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(message));
+            })
+            .catch((error) => {
+                console.log(error);
+                message = { 
+                    success: false, 
+                    serverErr: 
+                    `Something went wrong on our end! 
+                    Please try again later.`
+                };
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(message));
+            })
+    }           
 }
 
 export async function put(req, res, next) {
@@ -97,26 +97,28 @@ export async function put(req, res, next) {
         message = {success: false, err: 'You are not authorised'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
-    } 
-    let updatedCourse =  { 
-        courseTitle : req.body.courseTitle,
-        features : req.body.features
     }
-    Video.findOneAndUpdate({_id: req.body._id}, updatedCourse)
-        .then((doc)=>{
-            message = {success: true, msg: doc.courseTitle + ' has been updated'};
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(message));
-        })
-        .catch((error) => {
-            console.log(error);
-            message = { 
-                success: false, 
-                serverErr: 
-                `Something went wrong on our end! 
-                Please try again later.`
-            };
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(message));
-        })       
+    else {
+        let updatedCourse =  { 
+            courseTitle : req.body.courseTitle,
+            features : req.body.features
+        }
+        Video.findOneAndUpdate({_id: req.body._id}, updatedCourse).exec()
+            .then((doc)=>{
+                message = {success: true};
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(message));
+            })
+            .catch((error) => {
+                console.log(error);
+                message = { 
+                    success: false, 
+                    serverErr: 
+                    `Something went wrong on our end! 
+                    Please try again later.`
+                };
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(message));
+            })
+    }      
 }
