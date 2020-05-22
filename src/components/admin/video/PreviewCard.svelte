@@ -34,6 +34,7 @@
         position: relative;
 		height: 450px;
 		text-align: left;
+        z-index: -1;
 	}
 
 	.content {
@@ -60,7 +61,7 @@
         line-height: 2.6rem;
     }
 
-    h3 {
+    h4 {
         position: relative;
         text-align: center;
         margin: 0 auto;
@@ -72,7 +73,7 @@
         <img src="/images/cards/thumbnail.png" alt="">
         <div class="content">
             {#if data.courseTitle}
-                <h3>{data.courseTitle}</h3>
+                <h4>{data.courseTitle}</h4>
             {/if}
             <div class="plan-features">
             {#each data.features as feature}
