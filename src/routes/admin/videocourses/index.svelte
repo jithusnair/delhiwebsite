@@ -9,7 +9,7 @@
 
 	onMount(() => {
 		getCourses();
-    });
+	});
     
 	let previewData;
 	
@@ -18,7 +18,7 @@
 	let course
 
     function getCourses() {
-		fetchWithTimeout('/admin/videocourses/videoCRUD', {
+		fetchWithTimeout('/admin/videocourses/videocourse_crud', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

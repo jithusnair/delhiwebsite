@@ -61,7 +61,7 @@
     
     function save() {
 		saving = true;
-		fetchWithTimeout('/admin/videocourses/videoCRUD', {
+		fetchWithTimeout('/admin/videocourses/videocourse_crud', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -102,7 +102,7 @@
     }
 
     function updateCourse() {
-        fetchWithTimeout('/admin/videocourses/videoCRUD', {
+        fetchWithTimeout('/admin/videocourses/videocourse_crud', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

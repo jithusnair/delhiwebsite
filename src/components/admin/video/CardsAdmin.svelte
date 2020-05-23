@@ -40,7 +40,7 @@
         displayDeleteConfirm = false;
         let data = {_id: deleteCourseId}
         if (event.detail) {
-            fetchWithTimeout('/admin/videocourses/videoCRUD', {
+            fetchWithTimeout('/admin/videocourses/videocourse_crud', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
