@@ -1,4 +1,4 @@
-import Video from '../../../_db/video';
+import VideoCourse from '../../../_db/videocourse';
 
 export async function post(req, res, next) {
     let message;
@@ -11,7 +11,7 @@ export async function post(req, res, next) {
     } 
     else {
         // Save the course details to DB
-        let video = new Video({
+        let video = new VideoCourse({
             courseTitle: req.body.courseTitle, 
             features: req.body.features
         })
@@ -40,7 +40,7 @@ export async function post(req, res, next) {
 
 export async function get(req, res, next) {
     let message;
-    Video.find({}).exec()
+    VideoCourse.find({}).exec()
         .then((docs)=>{
             message = {success: true, data: docs};
             res.setHeader('Content-Type', 'application/json');
@@ -69,7 +69,7 @@ export async function del(req, res, next) {
         res.end(JSON.stringify(message));
     }
     else {
-        Video.findByIdAndRemove(req.body._id).exec()
+        VideoCourse.findByIdAndRemove(req.body._id).exec()
             .then(()=>{
                 message = {success: true};
                 res.setHeader('Content-Type', 'application/json');
@@ -103,7 +103,7 @@ export async function put(req, res, next) {
             courseTitle : req.body.courseTitle,
             features : req.body.features
         }
-        Video.findOneAndUpdate({_id: req.body._id}, updatedCourse).exec()
+        VideoCourse.findOneAndUpdate({_id: req.body._id}, updatedCourse).exec()
             .then((doc)=>{
                 message = {success: true};
                 res.setHeader('Content-Type', 'application/json');
