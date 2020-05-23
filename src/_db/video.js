@@ -1,15 +1,13 @@
 var mongoose = require('mongoose');
 
-var commentSchema = new mongoose.Schema({
-    text: String,
-    author: {
-        id: {
+var videoSchema = new mongoose.Schema({
+    id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }, 
-        username: String
+            ref: "VideoCourseDetail"
     },
-    created: {type: Date, default: Date.now}
+    title: String,
+    description: String,
+    link: String
 });
 
-module.exports = mongoose.model('Comment', commentSchema);
+module.exports = mongoose.model('Video', videoSchema);
