@@ -18,7 +18,7 @@
 </style>
 
 {#if showErr}
-    <div transition:fade={{duration:500}} class="error">
+    <div transition:fade|local={{duration:500}} class="error">
         <slot>
         </slot>
     </div>

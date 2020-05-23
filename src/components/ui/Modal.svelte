@@ -17,7 +17,7 @@
 </style>
 
 {#if displayModal}
-    <div transition:fade={{duration: 500}} class="background">
+    <div transition:fade|local={{duration: 500}} class="background">
         <slot></slot>
     </div>
 {/if}

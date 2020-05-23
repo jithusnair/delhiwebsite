@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
 
-    import { fade, scale } from 'svelte/transition';
+    import { scale } from 'svelte/transition';
 
     import Modal from '../../ui/Modal.svelte';
 
@@ -88,7 +88,7 @@
 
 
 <Modal displayModal={display}>
-    <div transition:scale={{duration: 500}} class="confirm">
+    <div transition:scale|local={{duration: 500}} class="confirm">
         <h2>Confirmation</h2>
         <p>
         Are you sure you want to delete <strong>{courseTitle}</strong> from

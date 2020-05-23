@@ -30,7 +30,7 @@
         here because those events wont be triggered in 
         edit mode anyway 
     -->
-    <div transition:scale="{{duration: 400}}" class="editCourse">
+    <div transition:scale|local="{{duration: 400}}" class="editCourse">
         <CourseNewAndEdit
             editData = {data}
             on:editSuccess={() => dispatch('reloadData')}

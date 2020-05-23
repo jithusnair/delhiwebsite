@@ -69,7 +69,7 @@
 </style>
 
 {#if data}
-    <div class="course" id="img-1" transition:scale >
+    <div class="course" id="img-1" transition:scale|local="{{duration: 400}}" >
         <img src="/images/cards/thumbnail.png" alt="">
         <div class="content">
             {#if data.courseTitle}
