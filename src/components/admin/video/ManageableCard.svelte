@@ -1,8 +1,9 @@
 <script>
     import PreviewCard from './PreviewCard.svelte';
 
+    import { goto } from '@sapper/app';
     import { scale } from 'svelte/transition';
-	import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -16,6 +17,10 @@
 
     function cardEdit() {
         dispatch('cardEdit', data);
+    }
+
+    function cardGoTo() {
+        goto('/admin/videocourses/'+ data._id);
     }
 </script>
 
@@ -83,12 +88,12 @@
         on:mouseenter={() => inside = true }
         on:mouseleave={() => inside = false }
         class="course" 
-        transition:scale >
+        transition:scale|local="{{duration: 400}}" >
         {#if inside}
             <div class="hover">
                 <table>
                     <tbody>
-                        <tr class="c-rud">
+                        <tr class="c-rud" on:click={cardGoTo}>
                             <td class="text">Show</td>
                             <td>
                                 <i class="fa fa-eye" aria-hidden="true"></i>
