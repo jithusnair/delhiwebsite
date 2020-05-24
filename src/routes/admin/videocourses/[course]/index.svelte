@@ -28,6 +28,8 @@
 
 	export let course;
 
+	let courseTitle;
+
 	let previewData;
 
 	let dbVideoData;
@@ -55,6 +57,7 @@
         .then(data => {
             if(data.success) {
 				dbVideoData = data.data;
+				courseTitle = data.courseTitle;
             }
 			else if (data.serverErr) {
                 getError = data.serverErr;
@@ -70,9 +73,14 @@
 </script>
 
 <style>
+	.course-title {
+		width: 80%;
+		margin: 5rem auto;
+	}
+
     .topContainer {
 		width: 80%;
-		margin: 10rem auto 2rem auto;
+		margin: 2rem auto 2rem auto;
 		display: flex;
 		justify-content: space-evenly;
 		border-top: grey solid 1px;
@@ -100,6 +108,10 @@
         rel="stylesheet" 
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </svelte:head>
+
+<div class="course-title">
+	<h1>{courseTitle}</h1>
+</div>
 
 <div class="topContainer">
 	<div class="lefthalf">
