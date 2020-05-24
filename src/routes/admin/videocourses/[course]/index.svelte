@@ -16,6 +16,7 @@
 	import PreviewVideo from '../../../../components/admin/videopage/PreviewVideo.svelte';
 	import VideoNewAndEdit from '../../../../components/admin/videopage/VideoNewAndEdit.svelte';
 	import VideosAdmin from '../../../../components/admin/videopage/VideosAdmin.svelte';
+	import ErrorSnackbar from '../../../../components/ui/ErrorSnackbar.svelte';
 
 	import { fetchWithTimeout } from '../../../../_helpers/fetchWithTimeout.js';
 
@@ -30,6 +31,14 @@
 	let previewData;
 
 	let dbVideoData;
+
+	let getError;
+
+	$: if(getError) {
+		setTimeout(() => {
+                getError = false;
+            }, 10000);
+	}
 
 	function getVideos() {
 		fetchWithTimeout(`/admin/videocourses/${course}/video_crud`, {
@@ -47,15 +56,13 @@
             if(data.success) {
 				dbVideoData = data.data;
             }
-			else if (data.err) {
-				// need to display GET request errors
-                // errorMsg = data.loginErr;
+			else if (data.serverErr) {
+                getError = data.serverErr;
             }
         })
         .catch((error) => {
-			// need to display GET request timeout and server errors
             if (error.name === 'AbortError') {
-                // errorMsg = 'Server taking too long to respond! Request timed out';
+                getError = 'Server taking too long to respond! Request timed out';
             }
             console.error('Error:', error);
         });
@@ -122,3 +129,7 @@
 		on:reloadData={getVideos}
 	/>
 </div>
+
+<ErrorSnackbar show={getError}>
+    <p>{getError}</p>
+</ErrorSnackbar>

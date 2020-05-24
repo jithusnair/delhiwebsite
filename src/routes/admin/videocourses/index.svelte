@@ -2,6 +2,7 @@
     import PreviewCard from '../../../components/admin/videocoursepage/PreviewCard.svelte';
     import CourseNewAndEdit from '../../../components/admin/videocoursepage/CourseNewAndEdit.svelte';
 	import CardsAdmin from '../../../components/admin/videocoursepage/CardsAdmin.svelte';
+	import ErrorSnackbar from '../../../components/ui/ErrorSnackbar.svelte';
 
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
     
@@ -10,6 +11,14 @@
 	onMount(() => {
 		getCourses();
 	});
+
+	let getError;
+
+	$: if(getError) {
+		setTimeout(() => {
+                getError = false;
+            }, 10000);
+	}
     
 	let previewData;
 	
@@ -34,15 +43,13 @@
             if(data.success) {
 				dbCourseData = data.data;
             }
-            else if (data.err) {
-				// errorMsg = data.err;
-				// need to display GET request errors
+            else if (data.serverErr) {
+				getError = data.serverErr;
             }
         })
         .catch((error) => {
-			// need to display GET request server errors and timeout errors
             if (error.name === 'AbortError') {
-                // errorMsg = 'Server taking too long to respond! Request timed out';
+                getError = 'Server taking too long to respond! Request timed out';
 			}
             console.error('Error:', error);
         });
@@ -110,3 +117,7 @@
 		on:reloadData={getCourses}
 	/>
 </div>
+
+<ErrorSnackbar show={getError}>
+    <p>{getError}</p>
+</ErrorSnackbar>
