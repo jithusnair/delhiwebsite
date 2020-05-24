@@ -86,6 +86,9 @@
             else if (data.err) {
                 saveError = data.err;
             }
+            else if (data.serverErr){
+                saveError = data.serverErr;
+            }
         })
         .catch((error) => {
             if (error.name === 'AbortError') {
@@ -144,6 +147,10 @@
 </script>
 
 <style>
+    .btns {
+       text-align: center;
+    }
+
     #ok {
         margin: 1rem;
         width: 100px;
@@ -187,7 +194,8 @@
     }
 
     .new-video-input {
-		text-align: left;
+        text-align: left;
+        width: 400px;
 		margin: 2rem 5rem 5rem 5rem;
 	}
 
