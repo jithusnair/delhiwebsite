@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var videoSchema = new mongoose.Schema({
-    id: {
+    courseId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "VideoCourseDetail"
     },
