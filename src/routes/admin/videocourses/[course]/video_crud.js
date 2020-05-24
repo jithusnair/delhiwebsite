@@ -4,8 +4,7 @@ import VideoCourse from '../../../../_db/videocourse';
 export async function post(req, res, next) {
     let message;
     // Check if user is logged in and has permission
-    //!req.user || !req.user.isAdmin
-    if(false) {
+    if(!req.user || !req.user.isAdmin) {
         message = {success: false, err: 'You are not authorised to create new videos'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
@@ -73,8 +72,7 @@ export async function get(req, res, next) {
 export async function del(req, res, next) {
     let message;
     // Check if user is logged in and has permission
-    //!req.user || !req.user.isAdmin
-    if(false) {
+    if(!req.user || !req.user.isAdmin) {
         message = {success: false, err: 'You are not authorised to delete this'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
@@ -104,7 +102,7 @@ export async function put(req, res, next) {
     let message;
     // Check if user is logged in and has permission
     //!req.user || !req.user.isAdmin
-    if(false) {
+    if(!req.user || !req.user.isAdmin) {
         message = {success: false, err: 'You are not authorised to edit this'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
