@@ -20,7 +20,7 @@
     }
 
     function cardGoTo() {
-        goto('/admin/videocourses/'+ data._id);
+        goto(`/admin/videocourses/${data._id}`);
     }
 </script>
 
