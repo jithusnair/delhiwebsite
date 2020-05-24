@@ -20,7 +20,7 @@
         margin: 0px;
         padding: 2rem;
         width: auto;
-        text-align: center;
+        text-align: left;
         z-index:2000;
     }
 
