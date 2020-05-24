@@ -1,4 +1,5 @@
 import Video from '../../../../_db/video';
+import VideoCourse from '../../../../_db/videocourse';
 
 export async function post(req, res, next) {
     let message;
@@ -42,10 +43,17 @@ export async function post(req, res, next) {
 
 export async function get(req, res, next) {
     let message;
+    let courseTitle;
+    let videoDocs;
     let {course} = req.params;
     Video.find({courseId: course}).exec()
+        .then((docs)=> {
+            videoDocs = docs;
+            return VideoCourse.findOne({_id:course}).exec()
+        })
         .then((docs)=>{
-            message = {success: true, data: docs};
+            courseTitle = docs.courseTitle;
+            message = {success: true, data: videoDocs, courseTitle: courseTitle};
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(message));
         })
