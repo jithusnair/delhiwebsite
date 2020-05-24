@@ -6,7 +6,7 @@ export async function post(req, res, next) {
     // Check if user is logged in and has permission
     //!req.user || !req.user.isAdmin
     if(false) {
-        message = {success: false, err: 'You are not authorised'};
+        message = {success: false, err: 'You are not authorised to create new course'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
     } 
@@ -30,7 +30,7 @@ export async function post(req, res, next) {
                 message = { 
                     success: false, 
                     serverErr: 
-                    `Something went wrong on our end! 
+                    `Something went wrong. Couldn't save the new course to database.
                     Please try again later.`
                 };
                 res.setHeader('Content-Type', 'application/json');
@@ -52,7 +52,7 @@ export async function get(req, res, next) {
             message = { 
                 success: false, 
                 serverErr: 
-                `Something went wrong on our end! 
+                `Something went wrong. Couldn't get courses from database! 
                 Please try again later.`
             };
             res.setHeader('Content-Type', 'application/json');
@@ -65,7 +65,7 @@ export async function del(req, res, next) {
     // Check if user is logged in and has permission
     //!req.user || !req.user.isAdmin
     if(false) {
-        message = {success: false, err: 'You are not authorised'};
+        message = {success: false, err: 'You are not authorised to delete this'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
     }
@@ -86,7 +86,7 @@ export async function del(req, res, next) {
                 message = { 
                     success: false, 
                     serverErr: 
-                    `Something went wrong on our end! 
+                    `Something went wrong. Couldn't delete everything from database. 
                     Please try again later.`
                 };
                 res.setHeader('Content-Type', 'application/json');
@@ -100,7 +100,7 @@ export async function put(req, res, next) {
     // Check if user is logged in and has permission
     //!req.user || !req.user.isAdmin
     if(false) {
-        message = {success: false, err: 'You are not authorised'};
+        message = {success: false, err: 'You are not authorised to edit this'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
     }
@@ -120,7 +120,7 @@ export async function put(req, res, next) {
                 message = { 
                     success: false, 
                     serverErr: 
-                    `Something went wrong on our end! 
+                    `Something went wrong. Couldn't save the edit to database. 
                     Please try again later.`
                 };
                 res.setHeader('Content-Type', 'application/json');
