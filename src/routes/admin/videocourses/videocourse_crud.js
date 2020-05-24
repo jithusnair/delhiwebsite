@@ -11,11 +11,11 @@ export async function post(req, res, next) {
     } 
     else {
         // Save the course details to DB
-        let video = new VideoCourse({
+        let videoCourse = new VideoCourse({
             courseTitle: req.body.courseTitle, 
             features: req.body.features
         })
-        video.save()
+        videoCourse.save()
             .then(()=>{
                 message = {
                     success: true, 
