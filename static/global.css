@@ -46,6 +46,7 @@ input{
 }
 
 textarea{
+    font-family: 'Roboto', sans-serif;
     width: 100%;
     border:.21rem solid rgb(192, 182, 182);
     resize: none;
