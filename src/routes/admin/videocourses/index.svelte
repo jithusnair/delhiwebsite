@@ -1,7 +1,7 @@
 <script>
-    import PreviewCard from '../../../components/admin/video/PreviewCard.svelte';
-    import CourseNewAndEdit from '../../../components/admin/video/CourseNewAndEdit.svelte';
-	import CardsAdmin from '../../../components/admin/video/CardsAdmin.svelte';
+    import PreviewCard from '../../../components/admin/videocoursepage/PreviewCard.svelte';
+    import CourseNewAndEdit from '../../../components/admin/videocoursepage/CourseNewAndEdit.svelte';
+	import CardsAdmin from '../../../components/admin/videocoursepage/CardsAdmin.svelte';
 
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
     
@@ -35,14 +35,15 @@
 				dbCourseData = data.data;
             }
             else if (data.err) {
-                errorMsg = data.loginErr;
+				// errorMsg = data.err;
+				// need to display GET request errors
             }
         })
         .catch((error) => {
+			// need to display GET request server errors and timeout errors
             if (error.name === 'AbortError') {
-                loading = false;
-                errorMsg = 'Server taking too long to respond! Request timed out';
-            }
+                // errorMsg = 'Server taking too long to respond! Request timed out';
+			}
             console.error('Error:', error);
         });
 	}
