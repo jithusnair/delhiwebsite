@@ -1,4 +1,5 @@
 import VideoCourse from '../../../_db/videocourse';
+import Video from '../../../_db/video';
 
 export async function post(req, res, next) {
     let message;
@@ -69,7 +70,12 @@ export async function del(req, res, next) {
         res.end(JSON.stringify(message));
     }
     else {
+        // first find and remove the course by id
         VideoCourse.findByIdAndRemove(req.body._id).exec()
+            // then remove all the videos referencing that course
+            .then(()=> {
+                return Video.findOneAndDelete({courseId: req.body._id}).exec()
+            })
             .then(()=>{
                 message = {success: true};
                 res.setHeader('Content-Type', 'application/json');
