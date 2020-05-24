@@ -2,6 +2,7 @@
     import ManageableVideo from './ManageableVideo.svelte';
     import ConfirmDeleteModal from './ConfirmDeleteModal.svelte';
     import Error from '../../../components/ui/Error.svelte';
+    import ErrorSnackbar from '../../../components/ui/ErrorSnackbar.svelte';
     import EditModal from './EditModal.svelte';
     
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
@@ -60,11 +61,11 @@
                 }
                 else if (data.err) {
                     // need to display error better
-                    // deleteError = data.err;
+                    deleteError = data.err;
                 }
                 else if (data.serverErr) {
                     // need to display server error better
-                    // deleteError = data.serverErr;
+                    deleteError = data.serverErr;
                 }
             })
             .catch((error) => {
@@ -145,3 +146,7 @@
     on:reloadData
     on:close = {() => displayEdit = false}
 />
+
+<ErrorSnackbar show={deleteError}>
+    <p>{deleteError}</p>
+</ErrorSnackbar>

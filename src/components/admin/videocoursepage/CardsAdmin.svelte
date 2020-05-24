@@ -2,6 +2,7 @@
     import ManageableCard from './ManageableCard.svelte';
     import ConfirmDeleteModal from './ConfirmDeleteModal.svelte';
     import Error from '../../../components/ui/Error.svelte';
+    import ErrorSnackbar from '../../../components/ui/ErrorSnackbar.svelte';
     import EditModal from './EditModal.svelte';
     
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
@@ -91,15 +92,6 @@
         grid-auto-flow: dense;
     }
 
-    .error-message {
-        font-size: 1.5rem;
-    }
-
-    .errBlock {
-        margin-top: 2rem;
-        width: 50%;
-    }
-
     @media only screen and (max-width: 1000px) {
         .blog-container {
             grid-template-columns: 300px 300px;
@@ -112,11 +104,6 @@
         }
     }
 </style>
-<div class="errBlock">
-    <Error showErr={deleteError? true: false}>
-        <p class="error-message">{deleteError}</p>
-    </Error>
-</div>
 
 <div class="blog-container">
     {#if docs}
@@ -144,3 +131,7 @@
     on:reloadData
     on:close = {() => displayEdit = false}
 />
+
+<ErrorSnackbar show={deleteError}>
+    <p>{deleteError}</p>
+</ErrorSnackbar>
