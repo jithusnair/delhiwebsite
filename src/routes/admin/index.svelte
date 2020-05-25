@@ -3,7 +3,6 @@
     import { goto } from '@sapper/app';
 
     const { session } = stores();
-    export let user;
 
     // Logout Logic
     function logout() {
@@ -71,4 +70,4 @@
     </div>
 </div>
 
-<div on:click={logout}><p>{user.fullname} wants to Logout</p></div>
+<div on:click={logout}><p>I want to Logout</p></div>
