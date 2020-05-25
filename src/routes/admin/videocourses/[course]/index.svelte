@@ -1,14 +1,28 @@
 <script context='module'>
     export async function preload({ params }) {
 		const { course } = params;
-		// const res = await this.fetch(`/admin/videocourses/video_crud`);
 
-		// if (res.status === 200) {
-		// 	const article = await res.json();
-		// 	return { article };
-		// }
+		let routeExists;
 
-		return { course }
+		await this.fetch(`/admin/videocourses/${course}/video_crud`,
+		{
+			method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', 
+		})
+		.then(response => response.json())
+		.then(data => {
+			routeExists = data
+		})
+
+		if (routeExists.success) {
+			return { course }
+		}
+		else {
+			this.error(404, 'Not found');
+		}
 	}
 </script>
 
@@ -51,9 +65,7 @@
             credentials: 'include', 
         },
         10000)
-        .then(response => {
-			return response.json()
-		})
+        .then(response => response.json())
         .then(data => {
             if(data.success) {
 				dbVideoData = data.data;
