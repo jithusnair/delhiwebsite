@@ -457,7 +457,7 @@
 	<a href="/" class="logo"><img src="images/nav/logo.svg" alt="" class="logo-img"><h3 class="logo-name">Direction</h3></a>
 	<nav class="nav">
 		<ul class="nav-menu">
-			<li class="nav-list"><a href="#" class="link">Online Classes</a>
+			<li class="nav-list"><a href="/videocourses" class="link">Online Classes</a>
 			</li>
 			<li class="nav-list"><a href="/underconstruction" class="link">Exams</a>
 			</li>
