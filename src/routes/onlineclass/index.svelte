@@ -1,8 +1,8 @@
 <script>
-    import ErrorSnackbar from '../components/ui/ErrorSnackbar.svelte';
-    import Cards from '../components/videocourse/Cards.svelte';
+    import ErrorSnackbar from '../../components/ui/ErrorSnackbar.svelte';
+    import Cards from '../../components/videocourse/Cards.svelte';
 
-    import { fetchWithTimeout } from '../_helpers/fetchWithTimeout.js';
+    import { fetchWithTimeout } from '../../_helpers/fetchWithTimeout.js';
     
     import { onMount } from 'svelte';
 
@@ -21,7 +21,7 @@
 	}
 
     function getCourses() {
-		fetchWithTimeout('/admin/videocourses/videocourse_crud', {
+		fetchWithTimeout('/readwrite/getvideocourse', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
