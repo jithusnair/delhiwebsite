@@ -1,120 +1,90 @@
-<script>
-    import { goto } from '@sapper/app';
-    import { stores } from '@sapper/app';
-    
-    import Loading from '../../components/ui/Loading.svelte';
-    import Error from '../../components/ui/Error.svelte';
+<script context="module">
+	export async function preload(page, session) {
+		const { user } = session;
 
-    import { fetchWithTimeout } from '../../_helpers/fetchWithTimeout.js';
-
-    const { session } = stores();
-
-    let username='';
-    let password='';
-
-    let errorMsg = '';
-
-     $:  if(errorMsg) {
-            setTimeout(() => {
-                errorMsg = false;
-            }, 10000);
+		if (!user) {
+            return this.redirect(302, '/admin');
         }
 
-    let loading = false;
+        else if(!user.isAdmin) {
+            return this.redirect(302, '/admin');
+        }
 
-    function login() {
-        loading = true;
-        let data = {username: username, password: password};
+		return { user };
+	}
+</script>
 
-        fetchWithTimeout('/admin/loginlogout', {
-            method: 'POST',
+<script>
+    import { stores } from '@sapper/app';
+    import { goto } from '@sapper/app';
+
+    const { session } = stores();
+    export let user;
+
+    // Logout Logic
+    function logout() {
+        fetch('/admin/loginlogout', {
+            method: 'GET',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
             credentials: 'include', 
-            body: JSON.stringify(data),
-        },
-        10000)
-        .then(response => {
-            loading = false;
-            return response.json()
-        })
-        .then(data => {
-            if(data.success) {
-                goto('/admin/dashboard');
-                session.set({user:{...data.user}});
-            }
-            else if (data.loginErr) {
-                errorMsg = data.loginErr;
-            }
-            else if (data.serverErr) {
-                errorMsg = data.serverErr;
-            }
-        })
-        .catch((error) => {
-            if (error.name === 'AbortError') {
-                loading = false;
-                errorMsg = 'Server taking too long to respond! Request timed out';
-            }
-            else {
-                console.error('Error:', error);
-            }
-        });
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    session.set({});
+                    goto('/admin');
+                }
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            });
     }
-</script>
+ </script>
 
 <style>
-    div {
-        height: 100%;
-        width: 100%;
-        position: fixed; 
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    
-    form {
-        margin: 0 auto;
-        height: 100%;
-        width: 300px;
+    .container {
+        width: 80%;
+        margin: 5rem auto;
         display: flex;
-        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .card {
+        width: 200px;
+        height: 200px;
+        border-radius: 2rem;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        display: flex;
         justify-content: center;
+        align-items: center;
+        transition: 0.5s box-shadow;
     }
 
-    #username, #password {
-        margin-top: 2rem;
+    .card:hover {
+        box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.2);
     }
 
-    .error-message {
-        font-size: 1rem;
+    a {
+        text-align: center;
+        font-size: 2rem;
     }
 
-    .background {
-        z-index: 1005;
-        background: rgba(0, 0, 0, 0.2);
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-    }
-
-    button {
-        margin-top: 2rem;
+    p:hover {
+        cursor: pointer;
     }
 </style>
 
-<div>
-    {#if loading}
-        <div class="background">
-            <Loading/>
-        </div>
-    {/if}
-    <form on:submit|preventDefault={login}>
-        <Error showErr={errorMsg? true: false}>
-            <p class="error-message">{errorMsg}</p>
-        </Error>
-        <input bind:value={username} id="username" type="text" name="username" placeholder="Username">
-        <input bind:value={password} id='password' type="password" name='password' placeholder="Password">
-        <button>Submit</button>
-    </form>
+<div class="container">
+    <div class="card">
+        <a href="/admin/usermanagement">Manage Users</a>
+    </div>
+    <div class="card">
+        <a href="/admin/videocourse">Manage Online Video Courses</a>
+    </div>
 </div>
+
+<div on:click={logout}><p>{user.fullname} wants to Logout</p></div>
