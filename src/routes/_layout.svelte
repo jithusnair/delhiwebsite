@@ -1,6 +1,6 @@
 <script>
 	import NavPlusLoginSignup from '../components/NavPlusLoginSignup.svelte';
-	
+
 	export let segment;
 
 	let displayLogIn = false;
@@ -9,7 +9,7 @@
 
 <style>
 	main {
-		height: 100%;
+		height: 100%;		
 		padding-top: 6rem;
 	}
 </style>
@@ -18,7 +18,7 @@
 	<slot></slot>
 </main>
 
-{#if segment !== undefined && segment !== 'backdoor'}
+{#if segment !== undefined && segment !== 'backdoor' && segment !=='admin'}
 	<NavPlusLoginSignup
 		{displayLogIn}
 		{displaySignUp}
