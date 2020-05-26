@@ -17,3 +17,7 @@
 		return { user }
 	}
 </script>
+
+<div>
+	<slot></slot>
+</div>
