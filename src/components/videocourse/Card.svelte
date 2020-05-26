@@ -1,5 +1,6 @@
 <script>
     import { scale } from 'svelte/transition';
+    import { goto } from '@sapper/app'
 
     export let data;
 </script>
@@ -14,8 +15,6 @@
         transform: translateX(-50%);
         width: auto;
         text-align:center;
-        cursor: default;
-        pointer-events:none;
     }
 
 	img {
@@ -34,7 +33,6 @@
         position: relative;
 		height: 450px;
 		text-align: left;
-        z-index: -1;
 	}
 
 	.content {
@@ -91,8 +89,7 @@
                 profile or purchased course
             -->
             <button 
-                on:click="" 
-                class="btn"
+                on:click={()=>goto(`/onlineclass/${data._id}`)}
                 >
                 Enroll Today
             </button>
