@@ -3,36 +3,17 @@
     import { goto } from '@sapper/app';
 
     const { session } = stores();
-
-    // Logout Logic
-    function logout() {
-        fetch('/admin/loginlogout', {
-            method: 'GET',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', 
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    session.set({});
-                    goto('/admin');
-                }
-            })
-            .catch((error) => {
-            console.error('Error:', error);
-            });
-    }
  </script>
 
 <style>
     .container {
         width: 80%;
-        margin: 5rem auto;
-        display: flex;
-        justify-content: space-evenly;
+        margin: 0 auto;
+        display: grid;
+        justify-content: center;
+        grid-gap: 5rem;
+        grid-template-columns: 200px 200px 200px;
+        grid-auto-flow: dense
     }
 
     .card {
@@ -55,10 +36,6 @@
         text-align: center;
         font-size: 2rem;
     }
-
-    p:hover {
-        cursor: pointer;
-    }
 </style>
 
 <div class="container">
@@ -69,5 +46,3 @@
         <a href="/admin/videocourses">Manage Online Video Courses</a>
     </div>
 </div>
-
-<div on:click={logout}><p>I want to Logout</p></div>
