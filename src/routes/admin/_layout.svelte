@@ -18,6 +18,19 @@
 	}
 </script>
 
+<script>
+	import AdminNav from '../../components/admin/AdminNav.svelte';
+
+</script>
+
+<style>
+	div {
+		margin-left: 225px;
+	}
+</style>
+
+<AdminNav/>
+
 <div>
 	<slot></slot>
 </div>
