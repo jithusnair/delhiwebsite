@@ -66,7 +66,7 @@
         <a href="/admin/usermanagement">Manage Users</a>
     </div>
     <div class="card">
-        <a href="/admin/videocourse">Manage Online Video Courses</a>
+        <a href="/admin/videocourses">Manage Online Video Courses</a>
     </div>
 </div>
 
