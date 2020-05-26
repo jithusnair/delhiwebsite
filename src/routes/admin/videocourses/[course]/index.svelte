@@ -87,11 +87,11 @@
 <style>
 	.course-title {
 		width: 80%;
-		margin: 5rem auto;
+		margin: 0 auto;
 	}
 
     .topContainer {
-		width: 80%;
+		width: 100%;
 		margin: 2rem auto 2rem auto;
 		display: flex;
 		justify-content: space-evenly;
@@ -99,8 +99,12 @@
 	}
 
 	.bottomContainer {
-		width: 80%;
+		width: 100%;
 		margin: 2rem auto;
+	}
+
+	.bottomContainer h2 {
+		margin-left: 2rem
 	}
 	
 	.lefthalf, .righthalf {
@@ -127,7 +131,7 @@
 
 <div class="topContainer">
 	<div class="lefthalf">
-		<h1>New Video</h1>
+		<h2>New Video</h2>
         <VideoNewAndEdit
 			courseId = {course} 
 			on:save={()=>{
@@ -139,14 +143,14 @@
 	</div>
 
 	<div class="righthalf">
-		<h1>Preview</h1>
+		<h2>Preview</h2>
 		<div>
 			<PreviewVideo videoData={previewData}/>
 		</div>
 	</div>
 </div>
 <div class="bottomContainer">
-	<h1>Videos in Database</h1>
+	<h2>Videos in Database</h2>
     <VideosAdmin 
 		docs = {dbVideoData}
 		courseId = {course}

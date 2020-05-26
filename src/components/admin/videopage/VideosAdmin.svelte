@@ -90,16 +90,7 @@
         margin-top: 2rem;
         display: grid;
         grid-gap: 5rem;
-        width: 70%;
-    }
-
-    .error-message {
-        font-size: 1.5rem;
-    }
-
-    .errBlock {
-        margin-top: 2rem;
-        width: 50%;
+        width: 75%;
     }
 
     @media only screen and (max-width: 1000px) {
@@ -114,11 +105,6 @@
         }
     }
 </style>
-<div class="errBlock">
-    <Error showErr={deleteError? true: false}>
-        <p class="error-message">{deleteError}</p>
-    </Error>
-</div>
 
 <div class="blog-container">
     {#if docs}

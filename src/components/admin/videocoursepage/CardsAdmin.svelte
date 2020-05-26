@@ -87,6 +87,7 @@
         margin-top: 2rem;
         display: grid;
         grid-gap: 5rem;
+        justify-content: center;
         grid-template-columns: 300px 300px 300px;
         grid-auto-rows: 450px;
         grid-auto-flow: dense;

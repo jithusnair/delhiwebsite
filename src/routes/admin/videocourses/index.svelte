@@ -58,16 +58,20 @@
 
 <style>
     .topContainer {
-		width: 80%;
-		margin: 10rem auto 2rem auto;
+		width: 100%;
+		margin: 0 auto 2rem auto;
 		display: flex;
 		justify-content: space-evenly;
 		border-top: grey solid 1px;
 	}
 
 	.bottomContainer {
-		width: 80%;
+		width: 100%;
 		margin: 2rem auto;
+	}
+
+	.bottomContainer h2 {
+		margin-left: 2rem
 	}
 	
 	.lefthalf, .righthalf {
@@ -90,7 +94,7 @@
 
 <div class="topContainer">
 	<div class="lefthalf">
-		<h1>New Course</h1>
+		<h2>New Course</h2>
 		<CourseNewAndEdit
             on:save={()=>{
                 previewData = null;
@@ -101,14 +105,14 @@
 	</div>
 
 	<div class="righthalf">
-		<h1>Preview</h1>
+		<h2>Preview</h2>
 		<div>
 			<PreviewCard data={previewData}/>
 		</div>
 	</div>
 </div>
 <div class="bottomContainer">
-	<h1>Courses in Database</h1>
+	<h2>Courses in Database</h2>
 	<!-- {#if loadingCards}
 		<Loading/>
 	{/if} -->
