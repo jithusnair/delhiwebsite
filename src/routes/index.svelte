@@ -9,7 +9,11 @@
 </script>
 
 <script>
-    import Nav from '../components/nav/Nav.svelte';
+    import NavPlusLoginSignup from '../components/NavPlusLoginSignup.svelte';
+    import ForgotSuccess from '../components/signinandup/ForgotSuccess.svelte';
+
+    let displayLogIn = false;
+    let displaySignUp = false;
 </script>
 
 <style>
@@ -43,7 +47,7 @@
     p,a,button{
         font-size: 1.6rem;
         line-height: 2.6rem;
-        color:#616161;
+        color: var(--text);
     }
 
     button{
@@ -76,7 +80,7 @@
         z-index: 10;
     }
     .heading{
-        color: #425066;
+        color: var(--heading);
         font-size: 5rem;
         font-weight: 700;
         line-height: 5.5rem;
@@ -159,7 +163,23 @@
 
 </style>
 
-<Nav/>
+<NavPlusLoginSignup
+    {displayLogIn}
+    {displaySignUp}
+    on:navlogin={() => displayLogIn = true}
+    on:signupopen = { () => {
+        displayLogIn = false;
+        displaySignUp = true;
+    }}
+    on:loginclose={() => displayLogIn = false}
+    on:loginopen = { () => {
+        displaySignUp = false;
+        displayLogIn = true;
+    }}
+    on:signupclose={() => displaySignUp = false}
+/>
+
+<!-- <ForgotSuccess display=true/> -->
 
 <!-- Start of Main section -->
 <section class="section main-section">   
@@ -171,7 +191,12 @@
         <br>
         What are you waiting for? Join today!</p>
 		<div class="btn-container">
-			<button class="btn register-btn">Register Now</button>
+			<button 
+                class="btn register-btn"
+                on:click={() => displaySignUp = true}
+                >
+                Register Now
+            </button>
 			<a href="" class="course-link">View Courses</a>
 		</div>
 	</div>
