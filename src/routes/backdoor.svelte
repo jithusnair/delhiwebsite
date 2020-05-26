@@ -41,7 +41,7 @@
         })
         .then(data => {
             if(data.success) {
-                goto('/admin/');
+                goto('/admin');
                 session.set({user:{...data.user}});
             }
             else if (data.loginErr) {

@@ -24,7 +24,7 @@
 	
 	let dbCourseData;
 
-	let course
+	let course;
 
     function getCourses() {
 		fetchWithTimeout('/admin/videocourses/videocourse_crud', {
