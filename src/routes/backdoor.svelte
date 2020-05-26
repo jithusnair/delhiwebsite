@@ -1,3 +1,12 @@
+<script context="module">
+	export async function preload(page, session) {
+		const { user } = session;
+
+		if (user && user.isAdmin) return this.redirect(302, '/admin');
+        else if (user && !user.isAdmin) return this.redirect(302, '/user');
+	}
+</script>
+
 <script>
     import { goto } from '@sapper/app';
     import { stores } from '@sapper/app';
