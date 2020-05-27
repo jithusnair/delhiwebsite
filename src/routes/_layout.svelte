@@ -18,7 +18,7 @@
 	<slot></slot>
 </main>
 
-{#if segment !== undefined && segment !== 'backdoor' && segment !=='admin'}
+{#if segment === 'underconstruction'}
 	<NavPlusLoginSignup
 		{displayLogIn}
 		{displaySignUp}
