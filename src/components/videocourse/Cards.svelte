@@ -11,12 +11,12 @@
 <style>
     .blog-container {
         width: 90%;
-        margin: 0 auto;
+        margin: 0 auto 1rem auto;
         display: grid;
         justify-content: center;
         grid-gap: 5rem;
         grid-template-columns: 300px 300px 300px;
-        grid-auto-rows: 450px;
+        grid-auto-rows: 500px;
         grid-auto-flow: dense;
     }
 
