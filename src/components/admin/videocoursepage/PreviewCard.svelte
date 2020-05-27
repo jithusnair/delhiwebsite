@@ -85,7 +85,9 @@
         <img src="" alt="">
         <div class="content">
             <h4>{data.courseTitle}</h4>
-            <h2 class="price"><span>₹</span>&nbsp;499</h2>
+            {#if data.price}
+                <h2 class="price"><span>₹</span>&nbsp;{data.price}</h2>
+            {/if}
             <hr class="card-seperator">
             <div class="plan-features">
             {#each data.features as feature}

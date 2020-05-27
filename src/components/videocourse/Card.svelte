@@ -82,7 +82,7 @@
         <img src="/images/cards/thumbnail.png" alt="">
         <div class="content">
             <h4>{data.courseTitle}</h4>
-            <h2 class="price"><span>₹</span>&nbsp;499</h2>
+            <h2 class="price"><span>₹</span>&nbsp;{data.price}</h2>
             <hr class="card-seperator">
             <div class="plan-features">
             {#each data.features as feature}
