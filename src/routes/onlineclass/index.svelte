@@ -55,10 +55,14 @@
         text-align: center;
         margin-top: 2rem;
     }
+
+    .tag {
+        text-align: center;
+    }
 </style>
 
 <h2>Online Classes</h2>
-
+<p class="tag">Learn at ease.</p>
 <Cards docs={dbCourseData}/>
 
 <ErrorSnackbar show={getError}>
