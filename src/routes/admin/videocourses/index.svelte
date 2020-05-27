@@ -77,7 +77,7 @@
 	.lefthalf, .righthalf {
 		width: 50%;
 		text-align: center;
-		height: 600px;
+		height: auto;
 		border-bottom: 1px solid black; 
 	}
 
