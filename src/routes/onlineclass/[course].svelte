@@ -46,6 +46,7 @@
 	import ErrorSnackbar from '../../components/ui/ErrorSnackbar.svelte';
 	import Videos from '../../components/videocourse/Videos.svelte';
 	import BuyNowCard from '../../components/videocourse/BuyNowCard.svelte';
+	import NavPlusLoginSignup from '../../components/NavPlusLoginSignup.svelte';
 
 	import { fetchWithTimeout } from '../../_helpers/fetchWithTimeout.js';
 
@@ -54,6 +55,11 @@
 	export let dbVideoData;
 
 	export let getError;
+
+	let displayLogIn = false;
+	let displaySignUp = false;
+
+	let redirection = `/payments/${courseDoc._id}`
 
 	$: if(getError) {
 		setTimeout(() => {
@@ -110,9 +116,29 @@
 </div>
 
 <div class='card'>
-	<BuyNowCard data={courseDoc}/>
+	<BuyNowCard 
+		data={courseDoc}
+		on:click={()=>displaySignUp = true}	
+	/>
 </div>
 
 <ErrorSnackbar show={getError}>
     <p>{getError}</p>
 </ErrorSnackbar>
+
+<NavPlusLoginSignup
+	{redirection}
+    {displayLogIn}
+    {displaySignUp}
+    on:navlogin={() => displayLogIn = true}
+    on:signupopen = { () => {
+        displayLogIn = false;
+        displaySignUp = true;
+    }}
+    on:loginclose={() => displayLogIn = false}
+    on:loginopen = { () => {
+        displaySignUp = false;
+        displayLogIn = true;
+    }}
+    on:signupclose={() => displaySignUp = false}
+/>
