@@ -96,7 +96,7 @@
             </div>
             <!-- On click - SignUp/SignIn first then redirect -->
             <button 
-                on:click={()=>goto(`/onlineclass/${data._id}`)}
+                on:click
                 >
                 Buy 
             </button>
