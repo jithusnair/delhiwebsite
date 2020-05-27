@@ -18,6 +18,7 @@
 	let feature3 = '';
 	let feature4 = '';
     let feature5 = '';
+    let price;
 
     let saving = false;
 
@@ -32,6 +33,7 @@
         feature3 = data.features[2];
         feature4 = data.features[3];
         feature5 = data.features[4];
+        price = data.price;
     }
     
     let saveError;
@@ -47,13 +49,15 @@
             data = {
                 _id: id,
                 courseTitle: courseTitle,
-                features: [feature1, feature2, feature3, feature4, feature5]
+                features: [feature1, feature2, feature3, feature4, feature5],
+                price: price
             }
         }
         else {
             data = {
                 courseTitle: courseTitle,
-                features: [feature1, feature2, feature3, feature4, feature5]
+                features: [feature1, feature2, feature3, feature4, feature5],
+                price: price
             }
             dispatch('inputChange', data);
         }
@@ -102,6 +106,7 @@
         feature3 = '';
         feature4 = '';
         feature5 = '';
+        price='';
     }
 
     function updateCourse() {
@@ -278,6 +283,16 @@
             id="feature5" 
             type="text" 
             placeholder="Type in feature number 5"
+        >
+    </div>
+    <div class="feature-input">
+        <label for="feature6">Price:</label>
+        <input 
+            bind:value={price}
+            on:input={onChange} 
+            id="feature6" 
+            type="number" 
+            placeholder="Type in course price"
         >
     </div>
     {#if editData}
