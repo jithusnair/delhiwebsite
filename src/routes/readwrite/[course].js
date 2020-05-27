@@ -3,7 +3,7 @@ import VideoCourse from '../../_db/videocourse.js';
 
 export async function get(req, res, next) {
     let message;
-    let courseTitle;
+    let courseDoc;
     let videoDocs;
     let {course} = req.params;
     Video.find({courseId: course}).exec()
@@ -18,8 +18,8 @@ export async function get(req, res, next) {
                 throw e;
             }
             else {
-                courseTitle = docs.courseTitle;
-                message = {success: true, data: videoDocs, courseTitle: courseTitle};
+                courseDoc = docs;
+                message = {success: true, data: videoDocs, course: courseDoc};
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify(message));
             }
