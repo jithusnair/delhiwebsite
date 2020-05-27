@@ -12,7 +12,8 @@ export async function post(req, res, next) {
     else {
         // Save the course details to DB
         let videoCourse = new VideoCourse({
-            courseTitle: req.body.courseTitle, 
+            courseTitle: req.body.courseTitle,
+            price: parseInt(req.body.price), 
             features: req.body.features
         })
         videoCourse.save()
@@ -104,6 +105,7 @@ export async function put(req, res, next) {
     else {
         let updatedCourse =  { 
             courseTitle : req.body.courseTitle,
+            price: parseInt(req.body.price),
             features : req.body.features
         }
         VideoCourse.findOneAndUpdate({_id: req.body._id}, updatedCourse).exec()
