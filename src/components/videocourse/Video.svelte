@@ -60,13 +60,6 @@
         height: 100%;
     }
 
-    button {
-        position: absolute;
-        top: 50%;
-        right: 5%;
-        transform: translateY(-50%);
-    }
-
     h3, p {
         width: 60%;
         text-align: left;
@@ -81,12 +74,7 @@
         .main-container div {
             padding: 1rem;
         }
-
-        button {
-            padding: 1.15rem 2rem;
-            right: 2%;
-        }
-
+        
         h3, p {
             width: 70%;
         }
