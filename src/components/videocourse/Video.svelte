@@ -67,11 +67,6 @@
         transform: translateY(-50%);
     }
 
-    .player {
-        width: 100%;
-        height: 100%;
-    }
-
     h3, p {
         width: 60%;
         text-align: left;
@@ -103,14 +98,6 @@
         <div>
             <h3>{videoData.title}</h3>
             <p>{videoData.description}</p>
-            <button bind:this={button} on:click={showVideo}>
-                {clickedButton && videoData.link? 'Close': 'Watch'}
-            </button>
         </div>
-        {#if clickedButton}
-            <div class="player" transition:slide|local="{{delay: 250, duration: 300}}">
-                <Playr videoLink={videoData.link}/>
-            </div>
-        {/if}
     </div>
 {/if}
