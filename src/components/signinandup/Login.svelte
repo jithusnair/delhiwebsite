@@ -8,7 +8,7 @@
     import { scale } from 'svelte/transition';
     
     import { createEventDispatcher } from 'svelte';
-    import { stores } from '@sapper/app';
+    import { stores, goto } from '@sapper/app';
 
     const { session } = stores();
     
@@ -28,6 +28,8 @@
     let loading = false;
 
     export let display = false;
+
+    export let gotoURL;
 
     function login() {
         loading = true;
@@ -51,7 +53,7 @@
                 if(data.success) {
                     session.set({user:{...data.user}});
                     dispatch('close');
-                    goto('/user');
+                    goto(gotoURL);
                 }
                 else if (data.loginErr) {
                     loginErr = data.loginErr;

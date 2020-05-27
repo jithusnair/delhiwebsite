@@ -12,16 +12,15 @@
     const dispatch = createEventDispatcher()
 
     export let displayLogIn = false;
+    export let displaySignUp = false;
     
+    export let redirection = '/user';
     
     let displayForgotEmail = false;
     let displayForgotToken = false;
     let displayForgotSuccess = false;
     let forgotEmailSuccess;
     let forgotTokenSuccess;
-    
-
-    export let displaySignUp = false;
 
     let displaySignUpResults = false;
     let signUpResults;
@@ -31,6 +30,7 @@
 
 <Login 
     display = {displayLogIn}
+    gotoURL = {redirection}
     on:signupopen
     on:loginclose
     on:forgotopen = {()=> {
@@ -52,6 +52,7 @@
 
 <SignUpResults
     display = {displaySignUpResults}
+    gotoURL = {redirection}
     {signUpResults}
     on:close={() => displaySignUpResults = false}
 />

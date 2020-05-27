@@ -3,7 +3,7 @@
 
     import { scale } from 'svelte/transition';
     import { createEventDispatcher } from 'svelte';
-    import { stores } from '@sapper/app';
+    import { goto, stores } from '@sapper/app';
 
     const { session } = stores();
 
@@ -12,6 +12,14 @@
     export let display;
 
     export let signUpResults;
+
+    export let gotoURL;
+
+    function pressedOk() {
+        goto(gotoURL);
+        session.set(signUpResults.session); 
+        dispatch('signupcomplete');
+    }
 </script>
 
 <style>
@@ -48,13 +56,6 @@
         <p>
         {signUpResults.msg}
         </p>
-        <button 
-        on:click = {() => {
-            session.set(signUpResults.session); 
-            dispatch('signupcomplete');
-            }}
-            >
-            Ok
-        </button>
+        <button on:click = {pressedOk}>Ok</button>
     </div>
 </Modal>
