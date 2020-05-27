@@ -31,13 +31,12 @@
 		border-radius: 1.5rem;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         position: relative;
-		height: 450px;
+		height: 500px;
 		text-align: left;
 	}
 
 	.content {
-		padding: 1rem 3rem;
-		height: 282px;
+		padding: 0 3rem;
 	}
 
     .plan-features {
@@ -61,8 +60,20 @@
 
     h4 {
         position: relative;
-        text-align: center;
+        text-align: left;
         margin: 0 auto;
+        line-height: 2.5rem;
+    }
+
+    .card-seperator {
+        width: 100%;
+        background-color: #85858559;
+        margin: 0 0 1rem 0;
+    }
+
+    .price {
+        text-align: left;   
+        color: rgb(93, 91, 255);
     }
 </style>
 
@@ -70,9 +81,9 @@
     <div class="course" id="img-1" transition:scale|local="{{duration: 400}}" >
         <img src="/images/cards/thumbnail.png" alt="">
         <div class="content">
-            {#if data.courseTitle}
-                <h4>{data.courseTitle}</h4>
-            {/if}
+            <h4>{data.courseTitle}</h4>
+            <h2 class="price"><span>₹</span>&nbsp;499</h2>
+            <hr class="card-seperator">
             <div class="plan-features">
             {#each data.features as feature}
                 {#if feature}
@@ -91,7 +102,7 @@
             <button 
                 on:click={()=>goto(`/onlineclass/${data._id}`)}
                 >
-                Enroll Today
+                Explore
             </button>
         </div>
     </div>

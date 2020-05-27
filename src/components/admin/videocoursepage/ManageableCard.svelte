@@ -32,7 +32,7 @@
 		border-radius: 1.5rem;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         position: relative;
-		height: 450px;
+		height: 500px;
 		text-align: left;
 	}
 
