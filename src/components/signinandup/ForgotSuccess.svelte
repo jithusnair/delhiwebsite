@@ -11,7 +11,7 @@
 
     let forgotPassToken = '';
 
-    export let forgotTokenSuccess;
+    export let message;
 
     export let display = false;
 </script>
@@ -24,7 +24,7 @@
         top: 50%;
         left: 50%;
         background-color: white;
-        height: 250px;
+        height: auto;
         transform: translate(-50%, -50%);
         border-radius: 2rem;
         z-index: 1003;
@@ -51,9 +51,9 @@
 </style>
 
 <Modal displayModal={display}>
-    <div transition:scale={{duration: 500}} class="forgotPassword">
-        <h3>Forgot Password</h3>
-        <p><strong>{forgotTokenSuccess}</strong></p>
+    <div transition:scale|local={{duration: 500}} class="forgotPassword">
+        <h3>Check Mail!</h3>
+        <p>{message}</p>
         <button on:click = {()=> dispatch('forgotclose')}>Ok</button>
     </div>
 </Modal>

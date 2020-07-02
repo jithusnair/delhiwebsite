@@ -1,17 +1,3 @@
-<script context="module">
-    export async function preload(page, session) {
-		const { user } = session;
-
-		if (user) {
-			return this.redirect(302, '/user');
-        }
-	}
-</script>
-
-<script>
-    import Nav from '../components/nav/Nav.svelte';
-</script>
-
 <style>
     section {
         height: 100%;
@@ -28,15 +14,35 @@
         transform: translate(-50%, -50%);
     }
 
-    @media screen and (max-width: 850px){
+    @media screen and (max-width: 600px){
         img {
-            width: 100%;
-            top: 25%;
+            width: 700px;
+            object-fit: cover;
         }
     }
-</style>
 
-<Nav/>
+    @media screen and (min-width: 768px) and (orientation: landscape){
+        img {
+            width: 600px;
+            object-fit: cover;
+        }
+    }   
+
+    @media screen and (min-width: 768px) and (orientation: portrait){
+        img {
+            width: 768px;
+            object-fit: cover;
+        }
+    } 
+
+    @media screen and (min-width: 1000px){
+        img {
+            width: 1000px;
+            object-fit: cover;
+        }
+    }
+
+</style>
 
 <section>
     <img src="/images/under_construction.jpg" alt="page under construction">

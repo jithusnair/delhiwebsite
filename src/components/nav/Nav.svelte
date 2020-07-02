@@ -232,32 +232,13 @@
 	.logo-name {
 		text-transform: uppercase;
 		color: var(--white);
+		line-height: 2.3rem;
 	}
 
 	h3 {
 		font-family: Manrope, sans-serif;
 		font-size: 2.5rem;
 		line-height: 3.8rem;
-	}
-
-	.btn {
-		border: none;	
-		font-family: Manrope, sans-serif;
-		color: var(--heading);
-		font-weight: 700;
-		line-height: 2rem;
-		-webkit-appearance: none;
-		text-align: center;
-		outline: none;
-		cursor: pointer;
-	}
-
-	.btn:hover {
-		background-position:100% 0;
-		-moz-transition:all .4s ease-in-out;
-		-o-transition:all .4s ease-in-out;
-		-webkit-transition:all .4s ease-in-out;
-		transition:all .4s ease-in-out;
 	}
 
 	.signin-btn{
@@ -319,10 +300,6 @@
 		transition: color .5s ease;
 	}
 
-	.link:hover{
-		color: rgb(136, 136, 247);
-	}
-
 	li {
 		font-size: 1.6rem;
 		line-height: 2.6rem;
@@ -351,6 +328,10 @@
 		padding:1rem 2vw 1rem 0;
 		color: var(--white);;
 		display: flex;
+	}
+
+	.academy {
+		letter-spacing: 0.83rem;
 	}
 
 	.nav {
@@ -383,12 +364,26 @@
 		}
 
 	.nav a,
-	.nav a:hover,
 	.nav a:active,
 	.nav a:visited {
 		display: block;
 		position: relative;
 	}
+
+	/* to avoid sticky hover problems
+
+        https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
+    
+    */
+    @media (hover: hover) {
+        .link:hover{
+			color: rgb(136, 136, 247);
+		}
+		.nav a:hover {
+			display: block;
+			position: relative;
+		}
+    }
 
 	@media only screen and (min-width: 1001px) {
 		
@@ -426,6 +421,7 @@
 			display: block;
 			background: rgb(34,39,73);
 			margin-left: auto;
+			cursor: pointer;
 		}
 		.nav{
 			padding-top: 7rem;
@@ -449,12 +445,13 @@
 	}
 </style>
 
-<svelte:head>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</svelte:head>
-
 <header class="header">
-	<a href="/" class="logo"><img src="images/nav/logo.svg" alt="" class="logo-img"><h3 class="logo-name">Direction</h3></a>
+	<a href="/" class="logo"><img src="images/nav/logo.png" alt="" class="logo-img">
+		<div class="logo-text">
+			<h3 class="logo-name">Direction</h3>
+			<h5 class="logo-name"><span class="academy">Academy</span></h5>
+		</div>
+	</a>
 	<nav class="nav">
 		<ul class="nav-menu">
 			<li class="nav-list"><a href="/onlineclass" class="link">Online Classes</a>
@@ -465,7 +462,7 @@
 			<li class="nav-list"><a href="/underconstruction" class="link">Resources</a>
 			</li>
 			<li class="nav-list"><a href="/underconstruction" class="link">Blog</a></li>
-			<li class="nav-list"><a href="/underconstruction" class="link">Contact</a></li>
+			<li class="nav-list"><a href="/contact" class="link">Contact</a></li>
 		</ul>
 		<div class="header-btns">
 			<button on:click={() => dispatch('navlogin')} class="btn signin-btn">Sign In</button>

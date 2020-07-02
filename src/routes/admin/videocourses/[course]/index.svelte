@@ -31,6 +31,7 @@
 	import VideoNewAndEdit from '../../../../components/admin/videopage/VideoNewAndEdit.svelte';
 	import VideosAdmin from '../../../../components/admin/videopage/VideosAdmin.svelte';
 	import ErrorSnackbar from '../../../../components/ui/ErrorSnackbar.svelte';
+	import Playr from '../../../../components/admin/videopage/Playr.svelte';
 
 	import { fetchWithTimeout } from '../../../../_helpers/fetchWithTimeout.js';
 
@@ -43,8 +44,8 @@
 	export let course;
 
 	let courseTitle;
-
 	let previewData;
+	let demoVideo;
 
 	let dbVideoData;
 
@@ -64,12 +65,13 @@
             },
             credentials: 'include', 
         },
-        10000)
+        30000)
         .then(response => response.json())
         .then(data => {
             if(data.success) {
 				dbVideoData = data.data;
 				courseTitle = data.courseTitle;
+				demoVideo = data.demoVideo;
             }
 			else if (data.serverErr) {
                 getError = data.serverErr;
@@ -117,13 +119,12 @@
 	.righthalf {
 		border-left: 1px solid black;
 	}
-</style>
 
-<svelte:head>
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</svelte:head>
+	#demo {
+		width: 80%;
+		margin: 5rem auto;
+	}
+</style>
 
 <div class="course-title">
 	<h1>{courseTitle}</h1>
@@ -151,6 +152,12 @@
 </div>
 <div class="bottomContainer">
 	<h2>Videos in Database</h2>
+	{#if demoVideo}
+		<div id="demo">
+			<h3>Demo Video</h3>
+			<Playr videoLink = {demoVideo} />
+		</div>
+	{/if}
     <VideosAdmin 
 		docs = {dbVideoData}
 		courseId = {course}

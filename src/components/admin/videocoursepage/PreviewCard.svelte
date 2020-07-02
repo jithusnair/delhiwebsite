@@ -21,7 +21,6 @@
 	img {
         object-fit: cover;
 		width: 100%;
-        height: 37.5%;
         border-top-left-radius: 1.5rem;
         border-top-right-radius: 1.5rem;
     }
@@ -48,12 +47,12 @@
     }
     .plan-features div {
         display: flex;
-        margin-bottom: 0.5rem
+        margin-bottom: 0.75rem
     }
     .tick {
         color: #4aae5e;
-        line-height: 2.6rem !important;
-        font-size: 2rem !important;
+        line-height: 2.6rem;
+        font-size: 2rem;
     }
 
     .plan-features p {
@@ -65,7 +64,6 @@
         position: relative;
         text-align: left;
         margin: 0 auto;
-        line-height: 2.5rem;
     }
 
     .card-seperator {
@@ -78,15 +76,25 @@
         text-align: left;   
         color: rgb(93, 91, 255);
     }
+    .gst {
+        font-size: 1rem;
+        color: grey;
+    }
 </style>
 
 {#if data}
     <div class="course" id="img-1" transition:scale|local="{{duration: 400}}" >
-        <img src="" alt="">
+        <img 
+            src={data.image? data.image.url: '/images/course/default-thumbnail.png'} 
+            alt="course thumbnail"
+        >
         <div class="content">
             <h4>{data.courseTitle}</h4>
             {#if data.price}
-                <h2 class="price"><span>₹</span>&nbsp;{data.price}</h2>
+                <h2 class="price">
+                    <span>₹</span>&nbsp;{data.price}
+                    <span class="gst">+ ₹{Math.floor(parseInt(data.price)*18)/100} GST</span>
+                </h2>
             {/if}
             <hr class="card-seperator">
             <div class="plan-features">

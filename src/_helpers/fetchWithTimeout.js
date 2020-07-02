@@ -11,7 +11,7 @@ export function fetchWithTimeout(uri, options = {}, time = 5000) {
     // be cancelled.
   
     const timeout = setTimeout(() => {
-      controller.abort()
+        controller.abort()
     }, time)
   
     return fetch(uri, config)

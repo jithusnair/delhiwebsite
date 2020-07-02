@@ -1,12 +1,9 @@
 <script>
-    import {onMount} from 'svelte';
+    import { onMount } from 'svelte';
     import Plyr from 'plyr';
 
     onMount(() => {
         const player = new Plyr('#player');
-        player.on('ended', event => {
-            ended = player.ended
-        });
     });
 
     export let videoLink;

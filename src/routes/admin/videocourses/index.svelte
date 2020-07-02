@@ -34,7 +34,7 @@
             },
             credentials: 'include', 
         },
-        10000)
+        30000)
         .then(response => {
 
 			return response.json()
@@ -59,7 +59,7 @@
 <style>
     .topContainer {
 		width: 100%;
-		margin: 0 auto 2rem auto;
+		margin: 3rem auto 2rem auto;
 		display: flex;
 		justify-content: space-evenly;
 		border-top: grey solid 1px;
@@ -85,12 +85,6 @@
 		border-left: 1px solid black;
 	}
 </style>
-
-<svelte:head>
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</svelte:head>
 
 <div class="topContainer">
 	<div class="lefthalf">
@@ -119,6 +113,7 @@
 	<CardsAdmin
 		docs = {dbCourseData}
 		on:reloadData={getCourses}
+		on:publish={getCourses}
 	/>
 </div>
 

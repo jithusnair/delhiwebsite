@@ -11,14 +11,14 @@
     
     export let display;
 
-    export let signUpResults;
+    export let verifyResults;
 
     export let gotoURL;
 
     function pressedOk() {
         goto(gotoURL);
-        session.set(signUpResults.session); 
-        dispatch('signupcomplete');
+        session.set(verifyResults.session); 
+        dispatch('ok');
     }
 </script>
 
@@ -52,9 +52,9 @@
 </style>
 
 <Modal displayModal={display}>
-    <div transition:scale={{duration: 500}} class="signUpResult">
+    <div transition:scale|local={{duration: 500}} class="signUpResult">
         <p>
-        {signUpResults.msg}
+        {verifyResults.msg}
         </p>
         <button on:click = {pressedOk}>Ok</button>
     </div>

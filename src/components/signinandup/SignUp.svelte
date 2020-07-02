@@ -33,15 +33,6 @@
         }, 10000);
     }
 
-    let signUpResult = '';
-
-    // FIND A MORE ELEGANT SOLUTION THAN THIS
-    // --------------------------------------
-    // Just to avoid auto-redirection by home-page ('/') preload due to 
-    // setting session store after a user sign-up and therefore resulting in MODE=2 not
-    // being displayed properly. 
-    // Therefore, temporarily save to session to signUpSession and set the
-    // session store only when the button in MODE=2 is clicked.
     let signUpSession;
 
     // Loading spinner control
@@ -62,11 +53,11 @@
     function signUp() {
         loading = true
         let data = {
-                    username: username,
+                    username: username.trim(),
                     password: password, 
-                    fullname: fullname,
-                    email: email, 
-                    mobile: mobile,
+                    fullname: fullname.trim(),
+                    email: email.trim(), 
+                    mobile: mobile.trim(),
                 };
 
         fetchWithTimeout('user/account/signup', {
@@ -78,7 +69,7 @@
             credentials: 'include', 
             body: JSON.stringify(data),
             },
-            10000)
+            30000)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network failed');
@@ -90,11 +81,10 @@
                 if (data.signUpErr) {
                     signUpErr = data.signUpErr
                 }
-                else if (data.signUpResult) {
-                    signUpResult = data.signUpResult;
+                else if (data.email) {
                     signUpSession = {user:{...data.session}};
                     cleanUpClose();
-                    dispatch('signupsuccess', {session: signUpSession, msg:signUpResult});
+                    dispatch('sentcode', {session: signUpSession, email:data.email});
                 }
                 // for now just display on the modal itself.
                 // Maybe later a better alert/snackbar/something else can be shown
@@ -103,9 +93,12 @@
                 }
             })
             .catch((error) => {
+                loading = false;
                 if (error.name === 'AbortError') {
-                    loading = false;
-                    loginErr = 'Server taking too long to respond! Request Timed out';
+                    signUpErr = 'Server taking too long to respond! Request Timed out';
+                }
+                else if (error.name === 'TypeError') {
+                    signUpErr = 'No Internet!';
                 }
                 console.error('Error:', error);
             });
@@ -136,11 +129,11 @@
         padding: 0 10px;
         width: 300px;
         position: fixed;
-        top: 50%;
+        top: 4rem;
         left: 50%;
         background-color: white;
-        height: 550px;
-        transform: translate(-50%, -50%);
+        height: 500px;
+        transform: translateX(-50%);
         border-radius: 2rem;
         z-index: 1003;
     }
@@ -215,11 +208,20 @@
     .input-error {
         color: red;
         font-size: 1rem;
+        line-height: 1rem;
+    }
+
+    .hide {
+        visibility: hidden;
+    }
+
+    .show {
+        visibility: visible;
     }
 </style>
 
 <Modal displayModal={display}>
-    <div transition:scale={{duration: 500}} class="signUp">
+    <div transition:scale|local={{duration: 500}} class="signUp">
         <!-- Loading Spinner -->
         {#if loading}
             <div class="loading"><Loading/></div>  
@@ -241,10 +243,11 @@
                 on:input={event => (fullname = event.target.value)}
                 on:blur={() => touchedName = true}
                 />
-            {#if !fullnameValid && touchedName}
-                <p class="input-error">Cannot be empty</p>
-            {/if}
-
+            <p 
+                class="input-error {!fullnameValid && touchedName? 'show': 'hide'}"
+            >
+                Cannot be empty
+            </p>
             <!-- Username  -->
             <input id="username" class:invalid={!usernameValid && touchedUsername} 
                 type='text'
@@ -253,11 +256,12 @@
                 placeholder="Username"
                 on:input={event => (username = event.target.value)}
                 on:blur={() => touchedUsername= true} 
-                />
-            {#if !usernameValid && touchedUsername}
-                <p class="input-error">Cannot be empty</p>
-            {/if}
-
+            />
+            <p 
+                class="input-error {!usernameValid && touchedUsername? 'show': 'hide'}"
+            >
+                Cannot be empty
+            </p>
             <!-- Email  -->
             <input id="email" class:invalid={!emailValid && touchedEmail} 
                 type='email'
@@ -267,10 +271,11 @@
                 on:input={event => (email = event.target.value)}
                 on:blur={() => touchedEmail = true} 
                 />
-            {#if !emailValid && touchedEmail}
-                <p class="input-error">Invalid Email</p>
-            {/if}
-
+            <p 
+                class="input-error {!emailValid && touchedEmail? 'show': 'hide'}"
+            >
+                Invalid Email
+            </p>
             <!-- Mobile  -->
             <input id="mobile" class:invalid={!mobileValid && touchedMobile} 
                 type='text'
@@ -280,9 +285,11 @@
                 on:input={event => (mobile = event.target.value)}
                 on:blur={() => touchedMobile = true} 
                 />
-            {#if !mobileValid && touchedMobile}
-                <p class="input-error">Invalid! Type in number without country code</p>
-            {/if}
+            <p 
+                class="input-error {!mobileValid && touchedMobile? 'show': 'hide'}"
+            >
+                Invalid! Type in number without country code
+            </p>
 
             <!-- Password  -->
             <input id="password" class:invalid={!passwordValid && touchedPassword} 
@@ -293,9 +300,11 @@
                 on:input={event => (password = event.target.value)}
                 on:blur={() => touchedPassword = true} 
                 />
-            {#if !passwordValid && touchedPassword}
-                <p class="input-error">Should be atleast 8 characters</p>
-            {/if}
+            <p 
+                class="input-error {!passwordValid && touchedPassword? 'show': 'hide'}"
+            >
+                Should be atleast 8 characters
+            </p>
             
             <button disabled={!formIsValid}>Submit</button>
             <p class="switchStatement">Already registered? 

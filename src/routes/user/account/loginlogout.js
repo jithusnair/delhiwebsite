@@ -1,4 +1,5 @@
 import passport from 'passport';
+import User from '../../../_db/user';
 
 // Log In
 // ****NOTES****
@@ -32,12 +33,18 @@ export async function post(req, res, next) {
                     
                     let tar = JSON.parse(JSON.stringify(req.user))
                     user = {
-                        _id: tar._id.toString(), 
-                        username: tar.fullname,
+                        _id: tar._id.toString(),
                         fullname: tar.fullname,
                         isVerified: tar.isVerified,
                         isAdmin: tar.isAdmin
                     };
+
+                    User.findByIdAndUpdate(user._id, {lastLogin: Date.now()}).exec()
+                    .catch((error)=>{
+                        console.log('User was logged in but could not update lastLogin');
+                        console.log(error);
+                    })
+
                     message = { success: true, user: user };
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify(message));

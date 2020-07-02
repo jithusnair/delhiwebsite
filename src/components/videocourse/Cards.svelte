@@ -15,22 +15,11 @@
         display: grid;
         justify-content: center;
         grid-gap: 5rem;
-        grid-template-columns: 300px 300px 300px;
-        grid-auto-rows: 500px;
+        grid-template-columns: repeat(auto-fill, 300px);
         grid-auto-flow: dense;
     }
 
-    @media only screen and (max-width: 1000px) {
-        .blog-container {
-            grid-template-columns: 300px 300px;
-        }
-    }
-
-    @media only screen and (max-width: 670px) {
-        .blog-container {
-            grid-template-columns: 300px;
-        }
-    }
+    
 </style>
 
 <div class="blog-container">

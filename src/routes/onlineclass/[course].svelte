@@ -17,8 +17,7 @@
                 'Content-Type': 'application/json',
             },
             credentials: 'include', 
-        },
-        10000)
+        })
         .then(response => response.json())
         .then(data => {
             if(data.success) {
@@ -26,8 +25,10 @@
 				courseDoc = data.course;
             }
 			else if (data.serverErr) {
-                getError = data.serverErr;
-            }
+				getError = data.serverErr;
+				this.error(404, 'Not found');
+			}
+			return { dbVideoData, courseDoc, getError }
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -45,10 +46,13 @@
 <script>
 	import ErrorSnackbar from '../../components/ui/ErrorSnackbar.svelte';
 	import Videos from '../../components/videocourse/Videos.svelte';
+	import DemoPlayr from '../../components/videocourse/DemoPlayr.svelte';
 	import BuyNowCard from '../../components/videocourse/BuyNowCard.svelte';
 	import NavPlusLoginSignup from '../../components/NavPlusLoginSignup.svelte';
+	import Timer from '../../components/ui/Timer.svelte';
 
-	import { fetchWithTimeout } from '../../_helpers/fetchWithTimeout.js';
+	import moment from 'moment';
+	import { onDestroy } from 'svelte';
 
 	export let courseDoc;
 
@@ -59,32 +63,76 @@
 	let displayLogIn = false;
 	let displaySignUp = false;
 
-	let redirection = `/payments/${courseDoc._id}`
+	let buy = false;
+
+	let redirection;
+
+	let launched;
+	let timer = {
+		days: '0',
+		hours: '00',
+		minutes: '00',
+		seconds: '00'
+	};
+	let interval;
+
+	countdown();
 
 	$: if(getError) {
 		setTimeout(() => {
                 getError = false;
             }, 10000);
 	}
+
+	function buyNow() {
+		buy = true;
+		redirection = `/user/onlineclass/${courseDoc._id}?buy=${buy}`
+		displaySignUp = true;
+	}
+
+	function countdown() {
+		interval = setInterval(() => {
+			launched = moment(courseDoc.launchDate).startOf('day') - moment();
+			if(launched>0){
+				let duration = moment.duration(launched);
+				timer = {
+					days: duration.days(),
+					hours: duration.hours(),
+					minutes: duration.minutes(),
+					seconds: duration.seconds(),
+				}
+			}
+			else if(interval) clearInterval(interval);
+		}, 1000);
+	}
+	
+	onDestroy(()=>{
+		if(interval) {
+			clearInterval(interval)
+		}
+	})
 </script>
 
 <style>
+	.container {
+        display: flex;
+		justify-content: space-around;
+		min-height: 100vh;
+    }
+
 	h2 {
         margin: 2rem 10rem;
     }
 
-	.card {
-		position: fixed;
-		top: 50%;
-		right: 2%;
-		transform: translateY(-45%);
-	}
-
 	.videos {
-		width: 70%;
+		width: 65%;
 	}
 
 	@media only screen and (max-width: 1000px) {
+		.container {
+			flex-direction: column;
+		}
+
         h2 {
         	margin: 2rem auto;
 			text-align: center;
@@ -93,33 +141,30 @@
 		.videos {
 			width: 100%;
 		}
-
-		.card {
-			display: block;
-			position: static;
-			width: 100%;
-			margin: 5rem 0 2rem 0;
-			transform: none;
-		}
     }
 </style>
 
-<svelte:head>
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</svelte:head>
+<div class="container">
+	{#if launched != undefined}
+		<div class="videos">
+			<h2>{courseDoc.courseTitle}</h2>
+			<DemoPlayr videoLink={courseDoc.demoVideo} />
+				{#if launched>0}
+					<h2>Classes Will Launch In</h2>
+					<Timer {timer}/>
+				{:else}
+					<h2>Classes</h2>
+					<Videos docs = {dbVideoData} />
+				{/if}
+		</div>
 
-<div class="videos">
-	<h2>{courseDoc.courseTitle}</h2>
-	<Videos docs = {dbVideoData} />
-</div>
-
-<div class='card'>
-	<BuyNowCard 
-		data={courseDoc}
-		on:click={()=>displaySignUp = true}	
-	/>
+		<div class='card'>
+			<BuyNowCard 
+				data={courseDoc}
+				on:click={buyNow}	
+			/>
+		</div>
+	{/if}
 </div>
 
 <ErrorSnackbar show={getError}>

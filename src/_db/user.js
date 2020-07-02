@@ -9,6 +9,8 @@ var UserSchema = new mongoose.Schema({
     isVerified: { type: Boolean, default: false },
     isAdmin: { type: Boolean, default: false},
     mobile: Number,
+    created: {type: Date, default: Date.now},
+    lastLogin: {type: Date, default: Date.now}
 });
 
 UserSchema.plugin(passportLocalMongoose);

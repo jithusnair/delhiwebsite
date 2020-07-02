@@ -48,18 +48,13 @@
             })
             .then(data => {
                 if(data.success) {
-                    let email = forgotPassEmail;
                     cleanUpClose();
-                    dispatch('forgotemailsuccess', 
-                        {
-                            forgotPassEmail: email, 
-                            msg:data.msg
-                        });
+                    dispatch('forgotemailsuccess', data.msg);
                 }
-                else if(!data.success && data.err) {
+                else if(data.err) {
                     forgotPassEmailErr = data.err;
                 }
-                else if(!data.success && data.serverErr) {
+                else if(data.serverErr) {
                     forgotPassEmailErr = data.serverErr;
                 }
             })
@@ -141,7 +136,7 @@
 </style>
 
 <Modal displayModal={display}>
-    <div transition:scale={{duration: 500}} class="forgotPassword">
+    <div transition:scale|local={{duration: 500}} class="forgotPassword">
         <h3>Forgot Password</h3>
         <!-- Loading Spinner -->
         {#if loading}

@@ -19,9 +19,8 @@
     let link = '';
     
     let touchedLink = false;
-    let linkValid;
 
-    $: linkValid = link? true: false;
+    $: validInputs = title && description && link;
 
     let saving = false;
 
@@ -73,7 +72,7 @@
             credentials: 'include', 
             body: JSON.stringify(data),
         },
-        10000)
+        30000)
         .then(response => {
 			saving = false;
 			return response.json();
@@ -116,7 +115,7 @@
             credentials: 'include', 
             body: JSON.stringify(data),
         },
-        10000)
+        30000)
         .then(response => response.json())
         .then(data => {
             if(data.success) {
@@ -224,16 +223,17 @@
     #descAndLink {
         margin-top: 1rem;
     }
+
+    span {
+        color: red;
+    }
 </style>
 
 <div class="new-video-input">
     <Error showErr={saveError? true: false}>
         <p class="error-message">{saveError}</p>
     </Error>
-    <Error showErr={!linkValid && touchedLink? true: false}>
-        <p class="error-message">Link cannot be left blank</p>
-    </Error>
-    <h3 id="videoTitle">Video Title</h3>
+    <h3 id="videoTitle">Video Title<span>*</span></h3>
     <input 
         bind:value = {title}
         on:input={onChange} 
@@ -242,7 +242,7 @@
         placeholder="Type in the course Title">
     <h3 id="descAndLink">Add Description and Video Link</h3>
     <div class="descAndLink">
-        <label for="description">Description: </label>
+        <label for="description">Description <span>*</span>: </label>
         <textarea 
             bind:value={description}
             on:input={onChange}
@@ -251,7 +251,7 @@
         ></textarea>
     </div>
     <div class="descAndLink">
-        <label for="videoLink">Link: </label>
+        <label for="videoLink">Link<span>*</span>: </label>
         <input 
             bind:value={link}
             on:input={onChange} 
@@ -263,13 +263,16 @@
     </div>
     {#if editData}
         <div class="btns">
-            <button on:click={updateCourse} id="ok">Ok</button>
+            <button 
+                disabled={!validInputs} 
+                on:click={updateCourse} id="ok">Ok
+            </button>
             <button on:click={cancel} id="cancel">Cancel</button>
         </div>
     {:else}
         <div class="saving">
             <button 
-                disabled={!linkValid? true: false} 
+                disabled={!validInputs} 
                 on:click={save}
             >
                 Save To Database

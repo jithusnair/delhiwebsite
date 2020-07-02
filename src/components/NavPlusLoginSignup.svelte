@@ -2,28 +2,34 @@
     import Nav from '../components/nav/Nav.svelte';
     import SignUp from '../components/signinandup/SignUp.svelte';
     import Login from '../components/signinandup/Login.svelte';
+    import VerifyCode from '../components/signinandup/VerifyCode.svelte';
     import SignUpResults from '../components/signinandup/SignUpResults.svelte';
     import ForgotEmail from '../components/signinandup/ForgotEmail.svelte';
-    import ForgotToken from '../components/signinandup/ForgotToken.svelte';
     import ForgotSuccess from '../components/signinandup/ForgotSuccess.svelte';
-    
+
+    import { goto, stores } from '@sapper/app';
     import { createEventDispatcher } from 'svelte';
+
+    const { session } = stores();
 
     const dispatch = createEventDispatcher()
 
     export let displayLogIn = false;
     export let displaySignUp = false;
     
+    // location to redirect to after signup or login operation 
+    // completes successfully. Can be set from outside.
     export let redirection = '/user';
     
     let displayForgotEmail = false;
-    let displayForgotToken = false;
     let displayForgotSuccess = false;
     let forgotEmailSuccess;
-    let forgotTokenSuccess;
 
     let displaySignUpResults = false;
-    let signUpResults;
+    let displayVerifyCode = false;
+    let email;
+    let signUpSession;
+    let verifyResults;
 </script>
 
 <Nav on:navlogin/>
@@ -43,18 +49,35 @@
     display = {displaySignUp}
     on:loginopen
     on:signupclose
-    on:signupsuccess = {(event) => {
-        signUpResults = event.detail;
-        displaySignUpResults = true;
+    on:sentcode = {(event) => {
+        email = event.detail.email;
+        signUpSession = event.detail.session;
+        displaySignUp = false;
+        displayVerifyCode = true;
         }
     }
+/>
+
+<VerifyCode
+    display={displayVerifyCode}
+    {email}
+    on:success={(event)=>{
+        displayVerifyCode = false;
+        displaySignUpResults=true;
+        verifyResults = {session: signUpSession , msg:event.detail};
+    }}
+    on:close={()=>{
+        displayVerifyCode = false;
+        goto(redirection);
+        session.set(signUpSession); 
+    }}
 />
 
 <SignUpResults
     display = {displaySignUpResults}
     gotoURL = {redirection}
-    {signUpResults}
-    on:close={() => displaySignUpResults = false}
+    {verifyResults}
+    on:ok={() => displaySignUpResults = false}
 />
 
 <ForgotEmail
@@ -62,24 +85,14 @@
     on:forgotclose={() => displayForgotEmail = false}
     on:forgotemailsuccess = {(event) => {
         forgotEmailSuccess = event.detail;
-        displayForgotToken = true;
-        }
-    }
-/>
-
-<ForgotToken
-    {forgotEmailSuccess}
-    display = {displayForgotToken}
-    on:forgotclose={() => displayForgotToken = false}
-    on:forgottokensuccess = {(event) => {
-        forgotTokenSuccess = event.detail;
+        displayForgotEmail = false;
         displayForgotSuccess = true;
         }
     }
 />
 
 <ForgotSuccess
-    {forgotTokenSuccess}
+    message = {forgotEmailSuccess}
     display = {displayForgotSuccess}
     on:forgotclose={() => displayForgotSuccess = false}
 />

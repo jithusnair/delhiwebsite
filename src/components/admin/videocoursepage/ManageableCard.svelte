@@ -1,5 +1,8 @@
 <script>
     import PreviewCard from './PreviewCard.svelte';
+    import ErrorSnackbar from '../../../components/ui/ErrorSnackbar.svelte';
+
+    import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
 
     import { goto } from '@sapper/app';
     import { scale } from 'svelte/transition';
@@ -10,6 +13,8 @@
     export let data;
 
     let inside;
+
+    let publishError;
 
     function cardDelete() {
         dispatch('cardDelete', {id: data._id, courseTitle: data.courseTitle});
@@ -22,10 +27,39 @@
     function cardGoTo() {
         goto(`/admin/videocourses/${data._id}`);
     }
+
+    function publishing() {
+        fetchWithTimeout('/admin/videocourses/publish', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({_id: data._id})
+        },
+        30000)
+        .then(response => {
+
+			return response.json()
+		})
+        .then(res => {
+            if(res.success) {
+				dispatch('publish');
+            }
+            else if (res.serverErr) {
+				publishError = data.serverErr;
+            }
+        })
+        .catch((error) => {
+            if (error.name === 'AbortError') {
+                publishError = 'Server taking too long to respond! Request timed out';
+			}
+            console.error('Error:', error);
+        });
+	}
 </script>
 
 <style>
-
 	.course {
 		width: 300px;
 		margin: 5rem auto;
@@ -74,12 +108,20 @@
     }
 
     .text {
-        text-align: right;
+        text-align: left;
     }
 
     .c-rud:hover {
         cursor: pointer;  
         color: #3D0CFF;
+    }
+
+    .red {
+        color: #D9200A;
+    }
+
+    .green {
+        color: #4BB543;
     }
 </style>
 
@@ -93,10 +135,23 @@
             <div class="hover">
                 <table>
                     <tbody>
-                        <tr class="c-rud" on:click={cardGoTo}>
-                            <td class="text">Show</td>
+                        <tr 
+                            class="c-rud {data.published? 'green': 'red'}" 
+                            on:click={publishing}
+                        >
+                            <td class="text">Published</td>
                             <td>
-                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                {#if data.published}
+                                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                {:else}
+                                    <i class="fa fa-window-close-o" aria-hidden="true"></i>
+                                {/if}
+                            </td>
+                        </tr>
+                        <tr class="c-rud" on:click={cardGoTo}>
+                            <td class="text">Videos</td>
+                            <td>
+                                <i class="fa fa-plus" aria-hidden="true"></i>
                             </td>
                         </tr>
                         <tr class="c-rud" on:click={cardEdit}>
@@ -118,3 +173,7 @@
         <PreviewCard {data}/>
     </div>
 {/if}
+
+<ErrorSnackbar show={publishError}>
+    <p>{publishError}</p>
+</ErrorSnackbar>

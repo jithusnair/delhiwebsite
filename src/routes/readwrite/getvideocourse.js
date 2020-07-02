@@ -2,7 +2,7 @@ import VideoCourse from '../../_db/videocourse';
 
 export async function get(req, res, next) {
     let message;
-    VideoCourse.find({}).exec()
+    VideoCourse.find({published: true}).exec()
         .then((docs)=>{
             message = {success: true, data: docs};
             res.setHeader('Content-Type', 'application/json');

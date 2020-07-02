@@ -49,7 +49,7 @@
                 credentials: 'include', 
                 body: JSON.stringify(data),
             },
-            10000)
+            30000)
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
@@ -88,22 +88,11 @@
         display: grid;
         grid-gap: 5rem;
         justify-content: center;
-        grid-template-columns: 300px 300px 300px;
+        grid-template-columns: repeat(auto-fill, 300px);
         grid-auto-rows: 500px;
         grid-auto-flow: dense;
     }
 
-    @media only screen and (max-width: 1000px) {
-        .blog-container {
-            grid-template-columns: 300px 300px;
-        }
-    }
-
-    @media only screen and (max-width: 670px) {
-        .blog-container {
-            grid-template-columns: 300px;
-        }
-    }
 </style>
 
 <div class="blog-container">
@@ -113,7 +102,8 @@
             <ManageableCard
                 {data}
                 on:cardDelete={deleteCourse}
-                on:cardEdit={editCourse}                
+                on:cardEdit={editCourse}
+                on:publish                
             />
         </div>
         {/each}

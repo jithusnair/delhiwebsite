@@ -8,12 +8,17 @@ export async function get(req, res, next) {
     let {course} = req.params;
     Video.find({courseId: course}).exec()
         .then((docs)=> {
+            // first remove all the links from the video details
+            docs = docs.map((item)=>{
+                item.link = null;
+                return item;
+            })
             videoDocs = docs;
-            return VideoCourse.findOne({_id:course}).exec()
+            return VideoCourse.findOne({_id:course, published:true}).exec()
         })
         .then((docs)=>{
             if(!docs) {
-                e = new Error('Cannot find the course');
+                let e = new Error('Cannot find the course');
                 e.name = "CourseNullError";
                 throw e;
             }

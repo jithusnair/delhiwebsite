@@ -3,8 +3,7 @@
 </script>
 
 <script>
-    import { slide, scale } from 'svelte/transition';
-    import Playr from './Playr.svelte';
+    import { scale } from 'svelte/transition';
 
     export let videoData;
 
@@ -69,10 +68,6 @@
         .main-container {
             width: 100%;
             margin: 5rem auto;
-        }
-
-        .main-container div {
-            padding: 1rem;
         }
         
         h3, p {

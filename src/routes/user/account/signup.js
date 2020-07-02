@@ -1,7 +1,8 @@
 import User from '../../../_db/user';
 import Token from '../../../_db/token';
-import nodemailer from 'nodemailer';
+import { verifyEmail } from '../../../_helpers/mailer';
 import generator from 'generate-password';
+
 
 export async function post(req, res, next) {
     let user = {
@@ -35,69 +36,35 @@ export async function post(req, res, next) {
             let tar = JSON.parse(JSON.stringify(req.user))
             session = {
                 _id: tar._id.toString(), 
-                username: tar.fullname,
                 fullname: tar.fullname,
                 isVerified: tar.isVerified,
                 isAdmin: tar.isAdmin
             };
 
+            // generate a random 4 digit token
             let randomToken = generator.generate({
-                length: 10,
-                numbers: true,
-                uppercase: true,
-                lowercase: true,
-                symbols: true
+                length:4, 
+                numbers:true, 
+                symbols:false, 
+                uppercase:false,
+                lowercase:false
             });
+
             let token = new Token({ _userId: user._id, token: randomToken });
             return token.save();
         })
-        // Send e-mail with the generated token
-        // Email is too simple as of now.
-        // Better email templating with custom domain would be better
-        // Use SENDGRID in the end to make emails better.
+        // send email
         .then((token) => {
-            var transporter = nodemailer.createTransport(
-                { 
-                    service: 'gmail', 
-                    auth: { user: process.env.USERNAME, pass: process.env.PASSWORD } 
-                });
-            let email_html = 
-                `Hello,
-                Please verify your account. The verification code is ${token.token}`;
-
-            var mailOptions = { 
-                from: 'no-reply@webapplication.com', 
-                to: user.email, 
-                subject: 'Account Verification', 
-                text: email_html
-            };
-            transporter.sendMail(mailOptions, function (err) {
-                if (err) {
-                    console.log(err);
-                    message = { 
-                        success: false, 
-                        signUpResult: 
-                        `Sorry! Something went wrong on our end!
-                        You have been registered but we were unable to send an email for verification.
-                        Try verifying through profile settings.`,
-                        session: session
-                    }
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(message)); 
-                }
-                else {
-                    message = { 
-                        success: true, 
-                        signUpResult: 
-                        'A verification code has been sent to ' + user.email + 
-                        '. Please verify the code in profile settings after logging in.' + 
-                        'The code will be valid for only 12 hrs.',
-                        session: session
-                    };
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(message));
-                }
-            });
+            return verifyEmail({token:token.token, email:req.body.email})
+        })
+        .then((result)=>{
+            message = {
+                success:true,
+                email: req.body.email,
+                session: session
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(message));
         })
         .catch((err) => {
             // Isolate user.register errors and send that to front end.

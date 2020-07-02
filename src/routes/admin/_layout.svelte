@@ -8,11 +8,11 @@
 		const { user } = session;
 
 		if (!user) {
-            return this.redirect(302, '/');
+            return this.redirect(302, '/backdoor');
         }
 
         else if(!user.isAdmin) {
-            return this.redirect(302, '/backdoor');
+            return this.redirect(302, '/');
 		}
 		return { user }
 	}

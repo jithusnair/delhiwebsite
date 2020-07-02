@@ -4,9 +4,6 @@
 
     onMount(() => {
         const player = new Plyr('#player');
-        player.on('ended', event => {
-            ended = player.ended
-        });
     });
 
     export let videoLink;

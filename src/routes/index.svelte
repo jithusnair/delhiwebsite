@@ -3,7 +3,8 @@
 		const { user } = session;
 
 		if (user) {
-			return this.redirect(302, '/user');
+            if(user.isAdmin) return this.redirect(302, '/admin');
+            else return this.redirect(302,'/user');
         }
 	}
 </script>
@@ -11,6 +12,7 @@
 <script>
     import NavPlusLoginSignup from '../components/NavPlusLoginSignup.svelte';
     import ForgotSuccess from '../components/signinandup/ForgotSuccess.svelte';
+    import Slide from '../components/ui/Slide.svelte';
 
     let displayLogIn = false;
     let displaySignUp = false;
@@ -65,13 +67,14 @@
     }
 
     .main-section{
-        padding: 2rem 10%;
+        padding: 0 10%;
         height: 100vh;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
     .main-content{
-        padding-top: 6rem;
         width: 50%;
         height: 100%;
         display: flex;
@@ -84,7 +87,7 @@
         font-size: 5rem;
         font-weight: 700;
         line-height: 5.5rem;
-        padding: 4rem 0;
+        padding: 0 0 4rem 0;
     }
     .hero-text{
         z-index: 5;
@@ -102,32 +105,22 @@
         font-weight: 600;
     }
     .hero-img{
-        position: absolute;
-        width: 46%;
-        top: 50%;
-        transform: translateY(-45%);
-        left: 52%;
+        width: 70%;
     }
     /* End Of Main Section Styles */
 
     @media screen and (max-width: 850px){
         /*main section style*/
         .main-content{
-            height: 60vh;
             width: 100%;
-            margin-top: 40vh;
             padding: 5% 0;
-            justify-content: space-around;
             align-items: center;
             text-align: center;
+            justify-content: flex-start;
         }
         .hero-img{
-            height: 40%;
-            width: auto;
+            width: 100%;
             max-width: 80%;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
         }
         .heading{
             font-size: 3.5rem;
@@ -135,6 +128,12 @@
         }
         .btn-container{
             padding: 2.5rem 0;
+        }
+
+        .main-section {
+            margin: 10rem auto;
+            height: auto;
+            flex-direction: column-reverse;
         }
         /*End of Main section*/
     }
@@ -161,6 +160,11 @@
         /*End of main section*/
     }
 
+    @media screen and (min-width: 1300px) {
+        .main-section {
+            height: 80vh;
+        }
+    }
 </style>
 
 <NavPlusLoginSignup
@@ -179,7 +183,7 @@
     on:signupclose={() => displaySignUp = false}
 />
 
-<!-- <ForgotSuccess display=true/> -->
+<Slide data={[{img:'/images/slideshow/1.jpg', link:'/onlineclass/5ef5945f83cdb410551501a3'},{img:'/images/slideshow/2.jpg'}]}/>
 
 <!-- Start of Main section -->
 <section class="section main-section">   
@@ -197,7 +201,7 @@
                 >
                 Register Now
             </button>
-			<a href="" class="course-link">View Courses</a>
+			<a href="/onlineclass" class="course-link">View Courses</a>
 		</div>
 	</div>
 	<img src="/images/index/covid_special.jpg" alt="video course" class="hero-img">

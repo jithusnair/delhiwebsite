@@ -33,7 +33,7 @@
 
     function login() {
         loading = true;
-        let data = {username: loginUsername, password: loginPassword};
+        let data = {username: loginUsername.trim(), password: loginPassword};
 
         fetchWithTimeout('user/account/loginlogout', {
             method: 'POST',
@@ -44,28 +44,31 @@
             credentials: 'include', 
             body: JSON.stringify(data),
             },
-            10000)
+            30000)
             .then(response => {
-                loading = false;
                 return response.json()
             })
             .then(data => {
                 if(data.success) {
                     session.set({user:{...data.user}});
-                    dispatch('close');
                     goto(gotoURL);
                 }
                 else if (data.loginErr) {
+                    loading = false;
                     loginErr = data.loginErr;
                 }
                 else if (data.serverErr) {
+                    loading = false;
                     loginErr = 'Something went wrong on our end! Please try again later';
                 }
             })
             .catch((error) => {
+                loading = false;
                 if (error.name === 'AbortError') {
-                    loading = false;
                     loginErr = 'Server taking too long to respond! Request Timed out';
+                }
+                else if (error.name === 'TypeError') {
+                    loginErr = 'No Internet!';
                 }
                 else {
                     console.error('Error:', error);
@@ -176,7 +179,7 @@
         <div class="loading"><Loading/></div>  
     {/if}
     <!-- Login Part -->
-    <div transition:scale={{duration: 500}} class="signIn">
+    <div transition:scale|local={{duration: 500}} class="signIn">
         <h3>Login</h3>
         <form on:submit|preventDefault={login}>
             <!-- {#if loginErr} -->

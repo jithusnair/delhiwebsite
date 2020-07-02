@@ -1,12 +1,39 @@
-<script context="module">
-	export async function preload(page, session) {
-		const { user } = session;
+<script context='module'>
+    export async function preload() {
+		let purchasedCourseData;
 
-		if (!user) {
-            return this.redirect(302, '/');
+		let getError;
+
+		await this.fetch(`/user/purchased`,
+		{	
+			method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+			credentials: 'include',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                purchasedCourseData = data.data;
+            }
+			else if (data.serverErr) {
+                getError = data.serverErr;
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
+        if(purchasedCourseData) {
+            return { purchasedCourseData }
         }
-
-		return { user };
+        else if (getError) {
+            this.error('402', 'Authentication failed')
+        }
+        else {
+            this.error('404', "not found");
+        }
 	}
 </script>
 
@@ -14,41 +41,38 @@
     import { stores } from '@sapper/app';
     import { goto } from '@sapper/app';
 
-    const { session } = stores();
-    export let user;
+    import Cards from '../../components/user/videocourse/Cards.svelte';
+    import ErrorSnackbar from '../../components/ui/ErrorSnackbar.svelte';
 
-//  Logout Logic
-    function logout() {
-        fetch('user/account/loginlogout', {
-            method: 'GET',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', 
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    session.set({});
-                    goto('/');
-                }
-            })
-            .catch((error) => {
-            console.error('Error:', error);
-            });
-    }
+    const { session } = stores();
+
+    export let purchasedCourseData;
  </script>
 
 <style>
     div {
-        margin: 5rem auto;
+        width: 85%;
+        margin: 0 auto;
+    }
+
+    p {
+        margin-bottom: 2rem;
+    }
+
+    .register-btn{
+        margin-right: 4rem;
+        background: #3D0CFF;
+        border-radius: 5px;
+        box-shadow: none;
     }
 </style>
-
 <div>
-<p>Hey {user.fullname}. This Dashhh... This is sooo good.... Am i right?</p>
-
-<!-- Logout  -->
-<button on:click={logout}>Logout</button>
+    <h2>Your Courses</h2>
+    {#if purchasedCourseData && purchasedCourseData.length > 0}
+        <Cards docs={purchasedCourseData}/>
+    {:else}
+        <p>There are no courses to display. <br> What are you waiting for? 
+        Purchase a course today and start learning!</p>
+        <button on:click={()=>goto('/user/onlineclass')} class="register-btn">See Courses</button>
+    {/if}
 </div>

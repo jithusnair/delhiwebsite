@@ -8,15 +8,14 @@
 </script>
 
 <style>
-	main {
+	div {
 		height: 100%;		
-		padding-top: 6rem;
 	}
 </style>
 
-<main>
+<div>
 	<slot></slot>
-</main>
+</div>
 
 {#if segment === undefined}
 	<NavPlusLoginSignup

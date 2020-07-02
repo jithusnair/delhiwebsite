@@ -1,12 +1,13 @@
 import User from '../../../_db/user';
 import Token from '../../../_db/token';
-import nodemailer from 'nodemailer';
+import { resetPassword } from '../../../_helpers/mailer';
 import generator from 'generate-password';
 
 // check the email of the user
 
 export async function post(req, res, next) {
     let message;
+    let newPassword;
     // Find the given token
     Token.findOne({ token: req.body.token}).exec()
         .then(() => {
@@ -16,9 +17,7 @@ export async function post(req, res, next) {
                 throw e;
             }
             // If we found a token, find a matching user
-            else {
-                return User.findOne({ email: req.body.email }).exec()
-            }
+            return User.findOne({ email: req.body.email }).exec()
         })
         .then((user)=>{
             if (!user) {
@@ -27,45 +26,25 @@ export async function post(req, res, next) {
                 throw e;
             }
             // set a new password and send the email
-            else {
-                let newPassword = generator.generate({
-                    length: 10,
-                    numbers: true,
-                    uppercase: true,
-                    lowercase: true,
-                    symbols: true
-                });
-                return user.setPassword(newPassword);
-            }
-        })
-        .then((user) => user.save().exec())
-        .then((user) => {
-            var transporter = nodemailer.createTransport(
-                { 
-                    service: 'gmail', 
-                    auth: { user: process.env.USERNAME, pass: process.env.PASSWORD } 
-                });
-    
-            let email_html = `Hello, 
-            Your new password is ${newPassword} 
-            You can change your password through the profile settings section.`;
-
-            var mailOptions = { 
-                from: 'no-reply@webapplication.com', 
-                to: user.email, 
-                subject: 'Account Verification', 
-                text: email_html
-            };
-            // Send Mail
-            transporter.sendMail(mailOptions, function (err) {
-                message = { 
-                    success: true, 
-                    msg: `Successfully changed password. <br>
-                    The new password has been sent to ${user.email}` 
-                };
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(message)); 
+            newPassword = generator.generate({
+                length: 12,
+                numbers: true,
+                uppercase: true,
+                lowercase: true,
+                symbols: false
             });
+            return user.setPassword(newPassword);
+        })
+        .then((user) => user.save())
+        .then(() => resetPassword({password:newPassword, email:req.body.email}))
+        .then(()=>{
+            message = {
+                success: true,
+                msg: `Password has been reset. The new password has been sent to
+                ${req.body.email}`
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(message));
         })
         .catch((err) => {
             // If no token was found

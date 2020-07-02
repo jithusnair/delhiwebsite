@@ -8,6 +8,7 @@ export async function post(req, res, next) {
         message = {success: false, err: 'You are not authorised to create new videos'};
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
+        return;
     } 
     else {
         // Save the course details to DB
@@ -42,7 +43,6 @@ export async function post(req, res, next) {
 
 export async function get(req, res, next) {
     let message;
-    let courseTitle;
     let videoDocs;
     let {course} = req.params;
     Video.find({courseId: course}).exec()
@@ -51,8 +51,12 @@ export async function get(req, res, next) {
             return VideoCourse.findOne({_id:course}).exec()
         })
         .then((docs)=>{
-            courseTitle = docs.courseTitle;
-            message = {success: true, data: videoDocs, courseTitle: courseTitle};
+            message = {
+                    success: true, 
+                    data: videoDocs, 
+                    courseTitle: docs.courseTitle,
+                    demoVideo: docs.demoVideo,
+            };
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(message));
         })
