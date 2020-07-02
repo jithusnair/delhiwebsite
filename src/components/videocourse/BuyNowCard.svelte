@@ -36,7 +36,6 @@
 
 	.content {
 		padding: 0 3rem;
-		height: 282px;
 	}
 
     .plan-features {
