@@ -173,6 +173,10 @@
             Orders
         </a>
         <hr>
+        <a href='/admin/sectors'>
+            Manage Sectors
+        </a>
+        <hr>
         <a href='/admin/users'>
             Users
         </a>

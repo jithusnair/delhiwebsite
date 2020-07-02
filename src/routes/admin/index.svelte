@@ -57,3 +57,9 @@
         <a href="/admin/petitioners">Look-up Petitioners</a>
     </div>
 </div>
+
+<div class="container">
+    <div class="card">
+        <a href="/admin/sectors">Manage Sectors</a>
+    </div>
+</div>
