@@ -9,7 +9,6 @@
 
 	onDestroy(() => {
         if(datePicker){
-            console.log(datePicker);
             datePicker.destroy();
         }
     });
