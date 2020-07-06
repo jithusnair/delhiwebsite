@@ -6,8 +6,8 @@ var ExamSchema = new mongoose.Schema({
         ref: "Sector"
     },
     examTitle: String,
-    abouts: Array,
-    details: Object,
+    heads: Array,
+    details: Array,
 });
 
-module.exports = mongoose.model('Exam', SectorSchema);
+module.exports = mongoose.model('Exam', ExamSchema);
