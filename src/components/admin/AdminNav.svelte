@@ -176,6 +176,9 @@
         <a href='/admin/sectors'>
             Manage Sectors
         </a>
+        <a href='/admin/exams'>
+            Manage Exams
+        </a>
         <hr>
         <a href='/admin/users'>
             Users

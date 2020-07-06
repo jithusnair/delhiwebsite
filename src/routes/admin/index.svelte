@@ -51,15 +51,18 @@
 
 <div class="container">
     <div class="card">
-        <a href="/admin/users">Look-up Users</a>
+        <a href="/admin/sectors">Manage Sectors</a>
     </div>
     <div class="card">
-        <a href="/admin/petitioners">Look-up Petitioners</a>
+        <a href="/admin/exams">Manage Exams</a>
     </div>
 </div>
 
 <div class="container">
     <div class="card">
-        <a href="/admin/sectors">Manage Sectors</a>
+        <a href="/admin/users">Look-up Users</a>
+    </div>
+    <div class="card">
+        <a href="/admin/petitioners">Look-up Petitioners</a>
     </div>
 </div>
