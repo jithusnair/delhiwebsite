@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import jQuery from 'jquery';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
