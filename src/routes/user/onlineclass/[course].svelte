@@ -191,6 +191,27 @@
 	})
 </script>
 
+<svelte:head>
+    <!-- Google Analytics  -->
+    <!-- Event snippet for English Course Sale conversion page
+	In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+	<script>
+		function gtag_report_conversion(url) {
+			var callback = function () {
+				if (typeof(url) != 'undefined') {
+				    // window.location = url;
+				}
+			};
+			gtag('event', 'conversion', {
+				'send_to': 'AW-617566841/ZzLfCKf3gtYBEPmkvaYC',
+				'transaction_id': '',
+				'event_callback': callback
+			});
+			return false;
+		}
+	</script>
+</svelte:head>
+
 <style>
 	.container {
 		display: flex;
@@ -263,7 +284,7 @@
 		{orderDetails}
 		courseID = {courseDoc._id}
 		collection = {'VideoCourseDetail'}
-		on:success={()=>displayPaymentSuccess = true}
+		on:success={()=> displayPaymentSuccess = true}
 		on:fail={(event)=>{
 			displayPaymentModal = true;
 			paymentProbMsg = event.detail;

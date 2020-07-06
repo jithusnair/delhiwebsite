@@ -69,6 +69,7 @@
             .then(data => {
                 if(data.success) {
                     dispatch('success');
+                    gtag_report_conversion();
                 }
                 else if (data.paymentErr) {
                     dispatch('fail', data.msg);
