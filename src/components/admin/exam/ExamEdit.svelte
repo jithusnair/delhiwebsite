@@ -1,7 +1,7 @@
 <script>
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
     import { createEventDispatcher } from 'svelte';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 
     import Error from '../../ui/Error.svelte';
 
@@ -162,6 +162,10 @@
         cleanUp();
         dispatch('cancel');
     }
+
+    onDestroy(()=>{
+        jQuery('#editModetextarea').trumbowyg('destroy');
+    })
 </script>
 
 <style>

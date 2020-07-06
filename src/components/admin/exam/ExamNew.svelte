@@ -2,6 +2,8 @@
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
     import { createEventDispatcher } from 'svelte';
 
+    import { onMount, onDestroy } from 'svelte';
+
     import Error from '../../ui/Error.svelte';
 
     export let sectors;
@@ -143,6 +145,10 @@
 
         jQuery('#textarea').trumbowyg('empty');
     }
+
+    onDestroy(()=>{
+        jQuery('#textarea').trumbowyg('destroy');
+    })
 </script>
 
 <style>
