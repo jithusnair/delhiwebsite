@@ -1,6 +1,7 @@
 <script>
     import SaveIndicator from '../../ui/SaveIndicator.svelte';
     import Error from '../../ui/Error.svelte';
+    import ConfirmDeleteModal from './ConfirmDeleteModal.svelte';
 
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
 
@@ -15,6 +16,9 @@
     
     let editMode;
     let sectorCopy;
+
+    let displayDeleteModal = false;
+    let deleteConfirmedOrCancelled = false;
 
     $: if(editMode) {
         let copy = {...sector};
@@ -59,41 +63,44 @@
         });
     }
 
-    function deleteSector() {
-        let fetchOptions;
+    function deleteSector(event) {
+        displayDeleteModal = false;
+        if(event.detail) {
+            let fetchOptions;
 
-        fetchOptions = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', 
-            body: JSON.stringify({data: sector}),
-        };
-        
-		fetchWithTimeout('/admin/sectors/sector_crud', fetchOptions,
-        30000)
-        .then(response => {
-			return response.json();
-		})
-        .then(data => {
-            if(data.success) {
-                cleanUp();
-                dispatch('delete')
-            }
-            else if (data.err) {
-                deleteError = data.err;
-            }
-            else if (data.serverErr){
-                deleteError = data.serverErr;
-            }
-        })
-        .catch((error) => {
-            if (error.name === 'AbortError') {
-                deleteError = 'Server taking too long to respond! Request timed out';
-            }
-            console.error('Error:', error);
-        });
+            fetchOptions = {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', 
+                body: JSON.stringify({data: sector}),
+            };
+            
+            fetchWithTimeout('/admin/sectors/sector_crud', fetchOptions,
+            30000)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                if(data.success) {
+                    cleanUp();
+                    dispatch('delete')
+                }
+                else if (data.err) {
+                    deleteError = data.err;
+                }
+                else if (data.serverErr){
+                    deleteError = data.serverErr;
+                }
+            })
+            .catch((error) => {
+                if (error.name === 'AbortError') {
+                    deleteError = 'Server taking too long to respond! Request timed out';
+                }
+                console.error('Error:', error);
+            });
+        }   
     }
 
     function cleanUp() {
@@ -161,7 +168,7 @@
                 </i>
                 <i
                     id="delete"
-                    on:click = {deleteSector}
+                    on:click = {() => displayDeleteModal = true }
                     class="fa fa-trash" aria-hidden="true">
                 </i>
             </div>
@@ -178,3 +185,9 @@
         </div>
     {/if}
 </div>
+
+<ConfirmDeleteModal 
+    display = {displayDeleteModal}
+    sectorTitle = {sector.sectorTitle}
+    on:response = {deleteSector}
+/>
