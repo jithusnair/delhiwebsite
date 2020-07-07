@@ -29,6 +29,8 @@
 
     let saveError;
 
+    let initialisedEditor = false;
+
     let editorOptions = {
         btns: [
             // ['viewHTML'],
@@ -59,6 +61,7 @@
     }
 
     function loaded() {
+        initialisedEditor = true;
         jQuery('#textarea').trumbowyg(editorOptions)
             .on('tbwchange', function(){ 
                 text[focus] = 
@@ -67,6 +70,7 @@
     }
 
     function changeFocus(changeFocusTo) {
+        initialisedEditor? null : loaded();
         focusChanging = true;
         let html = jQuery('#textarea').trumbowyg('html');
         if(text[changeFocusTo]) {
@@ -209,14 +213,6 @@
     }
 
 </style>
-
-<svelte:head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.19.1/trumbowyg.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.21.0/ui/trumbowyg.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.21.0/plugins/table/ui/trumbowyg.table.min.css">
-    
-    <script on:load = {loaded} src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.19.1/plugins/table/trumbowyg.table.min.js"></script>
-</svelte:head>
 
 <h3>New Exam</h3>
 <Error showErr={saveError? true: false}>
