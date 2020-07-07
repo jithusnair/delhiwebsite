@@ -84,10 +84,22 @@
 
     table {
         position: absolute;
+        width: auto;
+        box-shadow: none;
+        border: none;
+        width: auto;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 1000;
+    }
+
+    table, td {
+        border: none;
+    }
+
+    tr:nth-child(even) {
+        background-color: unset;
     }
 
     tr {
@@ -95,8 +107,11 @@
     }
 
     td {
+        font-size: unset;
+        line-height: unset;
         vertical-align: middle;
         padding: 1rem;
+        color: unset;
     }
 
     .c-rud {
