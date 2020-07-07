@@ -44,9 +44,7 @@
     <div class="card">
         <a href="/admin/videocourses">Manage Online Video Courses</a>
     </div>
-    <div class="card">
-        <a href="/admin/orders">Look-up Orders Placed</a>
-    </div>
+    
 </div>
 
 <div class="container">
@@ -56,6 +54,9 @@
     <div class="card">
         <a href="/admin/exams">Manage Exams</a>
     </div>
+    <div class="card">
+        <a href="/admin/testpacks">Manage Testpacks</a>
+    </div>
 </div>
 
 <div class="container">
@@ -64,5 +65,8 @@
     </div>
     <div class="card">
         <a href="/admin/petitioners">Look-up Petitioners</a>
+    </div>
+    <div class="card">
+        <a href="/admin/orders">Look-up Orders Placed</a>
     </div>
 </div>

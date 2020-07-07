@@ -46,15 +46,8 @@
         --moz-outline-style: none;
     }
 
-    button::-moz-focus-inner {
-        border: 0;
-    }
-
     .btn{
-        position: absolute;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
+        margin: 1rem auto;
         font-size: 1.5rem;
         background: none;
         border: 1px solid white;
@@ -169,15 +162,15 @@
         <a href='/admin/videocourses'>
             Manage Online Classes
         </a>
-        <a href='/admin/orders'>
-            Orders
-        </a>
         <hr>
         <a href='/admin/sectors'>
             Manage Sectors
         </a>
         <a href='/admin/exams'>
             Manage Exams
+        </a>
+        <a href='/admin/testpacks'>
+            Manage Testpacks
         </a>
         <hr>
         <a href='/admin/users'>
@@ -186,6 +179,9 @@
         <a href='/admin/petitioners'>
             Petitioners
         </a>
+        <a href='/admin/orders'>
+            Orders
+        </a>
     </div>
-    <button on:click={logout} class="btn">Logout</button>
+    <div on:click={logout} class="btn">Logout</div>
 </div>
