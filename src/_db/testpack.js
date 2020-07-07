@@ -7,15 +7,8 @@ var TestPackSchema = new mongoose.Schema({
     },
     testPackTitle: String,
     price: Number,
-    courseValidity: Number, // Days the course will be valid from the date of purchase
+    validity: Number, // Days the course will be valid from the date of purchase
     features: [String],
-    image: {
-            filename: String,
-            url: String
-    },
-    sections: Array,
-    chapters: Object,
-    demoVideo: String,
     launchDate: Date,
     published: {type:Boolean, default: false} // Whether course is to be published  
 });
