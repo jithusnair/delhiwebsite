@@ -4,6 +4,7 @@
 
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
     import { onMount } from 'svelte';
+    import { goto } from '@sapper/app';
 
 	onMount(() => {
 		reload();
@@ -72,5 +73,5 @@
     {/if}
     <hr>
     <p>Once a sector has been added, you can add details of exams that come under these sectors</p>
-    <button>Add Exams</button>
+    <button on:click={() => goto('/admin/exams')}>Add Exams</button>
 </div>
