@@ -13,7 +13,7 @@
 
     onDestroy(()=>{
         let node = document.getElementById('trumbowyg-icons');
-        node.parentNode.removeChild(node);
+        if(node) node.parentNode.removeChild(node);
     })
 
     let sectors;
