@@ -32,6 +32,7 @@
     import SectionMaster from '../../../../components/admin/testsets/section/SectionMaster.svelte';
     import ChapterMaster from '../../../../components/admin/testsets/chapter/ChapterMaster.svelte';
     import TestSetMaster from '../../../../components/admin/testsets/testset/TestSetMaster.svelte';
+    import ErrorSnackBar from '../../../../components/ui/ErrorSnackbar.svelte';
     import { fetchWithTimeout } from '../../../../_helpers/fetchWithTimeout.js';
     import { sectionStore } from '../../../../store/section.js';
     import { chapterStore } from '../../../../store/chapter.js';
@@ -40,6 +41,8 @@
 
     export let sections;
     export let testPack;
+
+    let getError;
 
     onMount(() => {
         sectionStore.set(sections);
@@ -99,3 +102,7 @@
         testPackId = {testPack._id}
     />
 {/if}
+
+<ErrorSnackBar show={getError? true: false}>
+    {getError}
+</ErrorSnackBar>
