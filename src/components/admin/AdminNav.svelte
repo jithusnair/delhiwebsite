@@ -118,34 +118,12 @@
         letter-spacing: 0.83rem;
     }
 
-    .admin-settings:hover {
-        background: white;
-        color: black;
-    }
-
-    .admin-settings {
-        position: fixed;
-        top: 1rem;
-        right: 4rem;
-        border: 1px solid var(--nav-color);
-        background: var(--nav-color);
-        border-radius: 1rem;
-        color: white;
-        cursor: pointer;
-        padding: 1rem;
-        z-index: 1001;
-    }
-
     hr {
         background-color: lightgray;
         width: 80%;
         margin: 0 auto;
     }
 </style>
-
-<a class="admin-settings" href="/admin/account">
-    Admin Settings
-</a>
 
 <div class="sidenav">
     <a href="/admin" id="logo">
