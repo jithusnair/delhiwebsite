@@ -1,28 +1,29 @@
 import TestSet from '../../../../_db/testset';
 import Section from '../../../../_db/section';
+import Chapter from '../../../../_db/chapter';
+import mongoose from 'mongoose';
 
 export async function get(req, res, next) {
     let message;
     let sections = [];
     let {testpack} = req.params;
-
+    
     Section.find({testPackId: testpack}).select('_id').exec()
     .then((docs)=> {
         docs.forEach(doc => {
             sections.push(doc._id)
         });
-        return TestSet.aggregate([
-            {
-                $match : { "section" : {$in : sections }}
-            },
-            {
-                $group :
-                    {
-                      _id : "$chapter",
-                      testSets: { $push: "$$ROOT"}
-                    }
-            }
-        ]).exec()
+        return Chapter.aggregate(
+            [
+                { $match : { sectionId : { $in : sections }} },
+                { $unset : [ "sectionId", "chapterTitle" ] } 
+            ])
+            .lookup({
+                    from: "testsets",
+                    localField: "_id",
+                    foreignField: "chapter",
+                    as: "testSets"
+            })
     })
     .then((docs) => {
         message = {

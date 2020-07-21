@@ -1,32 +1,25 @@
 import Section from '../../../../_db/section';
 import Chapter from '../../../../_db/chapter';
 
+import mongoose from 'mongoose'; 
+
 // Get Chapters belonging to the list of sections under the particular testpack_id
 // Otherwise get operation would yeild a lot of chapters
 export async function get(req, res, next) {
     let message;
-    let sections = [];
+    // let sections = [];
     let {testpack} = req.params;
 
-    Section.find({testPackId: testpack}).select('_id').exec()
-    .then((docs)=> {
-        docs.forEach(doc => {
-            sections.push(doc._id)
-        });
-        
-        return Chapter.aggregate(
-            [
-                { $match : { sectionId : { $in : sections }} },
-
-                {
-                  $group :
-                    {
-                      _id : "$sectionId",
-                      chapters: { $push:  { _id: "$_id", chapterTitle: "$chapterTitle" } }
-                    }
-                 }
-            ]
-        ).exec()
+    Section.aggregate(
+    [
+        { $match : { testPackId : mongoose.Types.ObjectId(testpack) } },
+        { $unset : [ "testPackId", "sectionTitle" ] }
+    ])
+    .lookup({
+            from: "chapters",
+            localField: "_id",
+            foreignField: "sectionId",
+            as: "chapters"
     })
     .then((docs)=>{  
         message = {
