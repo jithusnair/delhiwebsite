@@ -10,12 +10,15 @@
 
     let dispatch = createEventDispatcher();
 
+    let initialisedEditor = false;
+
     onMount(() => {
         jQuery('#editModetextarea').trumbowyg(editorOptions)
             .on('tbwchange', function(){ 
                 text[focus] = 
                     focusChanging? text[focus] : jQuery('#editModetextarea').trumbowyg('html');
             });
+        initialisedEditor = true;
         selector = [...examData.heads];
         text = [...examData.details];
         selector.unshift('');
@@ -164,7 +167,9 @@
     }
 
     onDestroy(()=>{
-        jQuery('#editModetextarea').trumbowyg('destroy');
+        if(initialisedEditor) {
+            jQuery('#editModetextarea').trumbowyg('destroy');
+        }
     })
 </script>
 
@@ -241,10 +246,6 @@
         outline: 0;
     }
 </style>
-
-<!-- The script tags for Trumbowyg is not required here because the component ExamNew.svelte
-will have fetched those scripts already for the page. So no need to do it here again since this
-component will only exist on the same page as ExamNew.svelte -->
 
 <div class="edit">
     <h3>Edit Exam</h3>

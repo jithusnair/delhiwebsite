@@ -151,7 +151,9 @@
     }
 
     onDestroy(()=>{
-        jQuery('#textarea').trumbowyg('destroy');
+        if(initialisedEditor) {
+            jQuery('#textarea').trumbowyg('destroy');
+        }
     })
 </script>
 
