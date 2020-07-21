@@ -18,16 +18,33 @@ export const upload = multer({
             cb(null, {fieldName: file.originalname});
         },
         key: function (req, file, cb) {
-            cb(null, Date.now().toString())
+            cb(null, Date.now().toString() + '.' + file.originalname.split('.').pop())
         }
     })
 });
 
-export function deleteFile(key) {
+export async function deleteFile(key) {
     var bucketInstance = new aws.S3();
     var params = {
         Bucket: 'direction-academy',
         Key: key
     };
-    return bucketInstance.deleteObject(params).promise();
+    try {
+        await bucketInstance.deleteObject(params).promise();
+        return 'Success';
+    } catch (error) {
+        return 'Error';
+    }
+}
+
+export function deleteMultiple(files) {
+    var bucketInstance = new aws.S3();
+    var params = {
+        Bucket: 'direction-academy', 
+        Delete: {
+            Objects: files, 
+            Quiet: true,
+        }
+    };
+    return bucketInstance.deleteObjects(params).promise();
 }
