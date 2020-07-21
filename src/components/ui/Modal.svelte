@@ -1,7 +1,35 @@
 <script>
     import { fade } from 'svelte/transition';
+    import { onMount } from 'svelte';
     
-    export let displayModal = true;
+    export let displayModal = false;
+
+    let initialisedScroll;
+    onMount(()=> {
+        enableScroll();
+        initialisedScroll = true;
+    })
+
+    $:  if(displayModal) disableScroll();
+        else if(initialisedScroll) enableScroll();
+
+    function disableScroll() {
+        // Get the current page scroll position 
+        let scrollTop =
+            window.pageYOffset || document.documentElement.scrollTop; 
+        let scrollLeft =
+            window.pageXOffset || document.documentElement.scrollLeft; 
+
+        // if any scroll is attempted, 
+        // set this to the previous value 
+        window.onscroll = function() { 
+            window.scrollTo(scrollLeft, scrollTop); 
+        };
+    } 
+
+    function enableScroll() {
+        if(window) window.onscroll = function() {}; 
+    }
 </script>
 
 <style>
