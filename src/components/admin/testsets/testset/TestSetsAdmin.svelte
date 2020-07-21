@@ -131,7 +131,7 @@
             </select>
         {/if}
     </div>
-    {#if $testSetStore[selectedChapter]}
+    {#if $testSetStore[selectedChapter] && $testSetStore[selectedChapter].length != 0}
         {#each $testSetStore[selectedChapter] as testSet (testSet._id)}
             <div animate:flip={{duration:200}}>
                 <ManageableTestSet
