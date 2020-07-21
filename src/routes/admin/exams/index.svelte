@@ -4,17 +4,12 @@
     import ManagableExams from '../../../components/admin/exam/ManagableExams.svelte';
 
     import { fetchWithTimeout } from '../../../_helpers/fetchWithTimeout.js';
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount } from 'svelte';
 
     onMount(()=>{
         getSectors();
         getExams();
     });
-
-    onDestroy(()=>{
-        let node = document.getElementById('trumbowyg-icons');
-        if(node) node.parentNode.removeChild(node);
-    })
 
     let sectors;
     let exams;
