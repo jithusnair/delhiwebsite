@@ -120,8 +120,6 @@
     }
     
     function cleanUp() {
-        selectedSection = null;
-        selectedChapter = null;
 	    testSetTitle = '';
         examDuration = ''; // in minutes
         totalMarks = '';
@@ -276,7 +274,14 @@
     
     <h4 for="sector">Testset belongs to Section and Chapters:</h4>
     <label>Section:</label>
-    <select bind:value={selectedSection} on:change = {onChange}>
+    <select 
+        bind:value={selectedSection} 
+        on:change = {()=> {
+            selectedChapter = $chapterStore[selectedSection][0]._id;
+            onChange();
+            }
+        }
+        >
         {#if $sectionStore && $sectionStore.length !=0 }
             {#each $sectionStore as section}
                 <option value="{section._id}">{section.sectionTitle}</option>
