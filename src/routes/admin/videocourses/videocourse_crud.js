@@ -1,8 +1,7 @@
 import VideoCourse from '../../../_db/videocourse';
 import Video from '../../../_db/video';
-import mongoose from 'mongoose';
 
-import {upload, deleteFile} from '../../../_helpers/imageUpload'; 
+import {upload, deleteFile} from '../../../_helpers/s3NormalBucket'; 
 
 export async function post(req, res, next) {
     let message;
