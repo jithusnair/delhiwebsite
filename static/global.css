@@ -71,6 +71,11 @@ input:focus{
     --body-background:#F6F8F9;
     --section-background:#F1F4F6;
     --nav-color:rgb(34,39,73);
+    --ruler-backgroud: rgb(87, 80, 80,0.3);
+    --quiz-date-color: rgba(129, 129, 129, 0.8);
+    --black-color: rgb(66, 65, 65);
+    --ruler-backgroud: rgb(87, 80, 80,0.3);
+    --quiz-question-color: rgb(82, 79, 79);
 }
 
 html{
