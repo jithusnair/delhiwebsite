@@ -67,11 +67,13 @@
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 1rem;
+        border-radius: 8px;
         background: rgba(0, 0, 0, 0.9);
         color: white;
         font-size: 3rem;
         z-index: 999;
+        margin:auto 2.5rem;
+        margin-bottom: 5rem;
     }
 
     table {

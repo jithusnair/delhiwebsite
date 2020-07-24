@@ -5,77 +5,84 @@
 </script>
 
 <style>
-    .price-card {
-        width: 30rem;
-        margin: 2rem auto;
-        background-color: #fff;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        height: 48rem;
-        padding: 5rem 5rem 4rem 5rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-
-    .card-top {
-        width: 100%;
-    }
-
-    .plan-name {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        font-weight: 800;
-    }
-
-    .price {
-        text-align: left;
-        font-size: 4.5rem;
-        color: rgb(93, 91, 255);
-    }
-
-    .price span {
-        font-size: 3rem;
-        line-height: 2.5rem;
-    }
-
-    .card-seperator {
-        width: 100%;
-        background-color: #85858559;
-        margin: 2rem 0;
-    }
-    .plan-features {
-        align-self: flex-start;
-        margin: 0 0 3rem 0;
-    }
-
-    .plan-features div {
-        display: flex;
-    }
-
-    .tick {
-        color: #4aae5e;
-        line-height: 2.6rem !important;
-        font-size: 2rem !important;
-    }
-
     .validity {
         text-align: center;
         font-size: 1.2rem;
         font-weight: 500;
     }
 
-    .buy-btn {
-        margin-bottom: 1.5rem;
-        justify-self: end;
-        font-weight: 900;
-        padding-left: 5rem;
-        padding-right: 5rem;
+    /* new card styling */
+    .card-head{
+        text-align: center;
+        margin-bottom: .5rem;
+        color: var(--black-color);
+    }
+    .price-new{
+        text-align: center;
+        color: var(--quiz-question-color);
+    }
+    .gst {
+        font-size: 1rem;
+        color: grey;
+    }
+    
+    .card-text p{
+        font-size: 1.4rem;
+        text-align: left;
+    }
+    .ruler{
+        background-color: var(--ruler-backgroud);
+        height: 0.1rem;
+        width: 100%;
+        margin: 1rem auto;
+    }
+    .card{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        padding:23px;
+        border-radius: 8px;
+        margin:auto 2.5rem;
+        margin-bottom: 5rem;
+        width: 30rem;
+        min-width: 23rem;
+        height: 38rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: var(--white);
+    }
+    .start-btn{
+        margin: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .start-btn .btn{
+        width: 70%;
+        margin-top: .5rem;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 50px;
+        box-shadow: 0 2px 3px 0 rgba(91,22,170,.3);
+        -webkit-appearance: none;
+        text-align: center;
+        color: var(--white);
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 2rem;
+        padding: 1.15rem 2.7rem;
+        background-image: linear-gradient(to right,rgb(34,39,73),rgb(33, 46, 129),rgb(33, 46, 129),rgb(34,39,73));
+        background-size: 300% 100%;
+        -moz-transition: all .4s ease-in-out;
+        -o-transition: all .4s ease-in-out;
+        -webkit-transition: all .4s ease-in-out;
+        transition: all .6s ease-in-out;
     }
 </style>
 
-{#if data}
+<!-- {#if data}
     <div transition:scale|local={{duration:400}} class="price-card">
         <div class="card-top">
             <h5 class="plan-name">{data.testPackTitle}</h5>
@@ -94,6 +101,37 @@
         </div>
         <div class="card-bottom">
             <button class="buy-btn btn">Buy&nbsp;Now</button>
+            <p class="validity">Validity: {data.validity} days</p>
+        </div>
+    </div>
+{/if} -->
+
+{#if data}
+    <div transition:scale|local={{duration:400}} class="card">
+        <div class="card-head">
+            <h3 class="card-head">{data.testPackTitle}</h3>
+            <h5 class="price-new">
+                <span>&#8377;</span>&nbsp;{data.price}
+                <span class="gst">
+                    + ₹{Math.floor(parseInt(data.price)*18)/100} GST
+                </span>
+            </h5>
+            <div class="ruler"></div>
+        </div>
+
+        <div class="card-text">
+            {#each data.features as feature}
+                {#if feature}
+                    <p>{feature}</p>
+                {:else}
+                    <p>&nbsp;</p>
+                {/if}
+            {/each}
+        </div>
+        
+        <div class="start-btn">
+            <div class="ruler"></div>
+            <button class="btn">Attempt&nbsp;Now</button>
             <p class="validity">Validity: {data.validity} days</p>
         </div>
     </div>

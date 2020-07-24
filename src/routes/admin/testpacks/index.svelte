@@ -118,7 +118,12 @@
 
 	.righthalf {
 		border-left: 1px solid black;
-	}
+    }
+    
+    .preview-card-container {
+        width: min-content;
+        margin: 2rem auto;
+    }
 </style>
 
 <div class="topContainer">
@@ -136,7 +141,7 @@
 
 	<div class="righthalf">
 		<h2>Preview</h2>
-		<div>
+		<div class="preview-card-container">
 			<TestPackPreviewCard data={previewData}/>
 		</div>
 	</div>
