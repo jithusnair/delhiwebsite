@@ -33,6 +33,7 @@ export async function post(req, res, next) {
     let exam = new Exam({
         sectorId: req.body.sectorId,
         examTitle: req.body.examTitle,
+        examShortTitle: req.body.examShortTitle,
         heads: req.body.heads,
         details: req.body.details,
     })
@@ -88,6 +89,7 @@ export async function put(req, res, next) {
     let updateData = {
         sectorId: req.body.sectorId,
         examTitle: req.body.examTitle,
+        examShortTitle: req.body.examShortTitle,
         heads: req.body.heads,
         details: req.body.details,
     }

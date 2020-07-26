@@ -6,6 +6,7 @@ var ExamSchema = new mongoose.Schema({
         ref: "Sector"
     },
     examTitle: String,
+    examShortTitle: String,
     heads: Array,
     details: Array,
 });

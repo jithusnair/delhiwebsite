@@ -11,6 +11,7 @@
     let dispatch = createEventDispatcher();
 
     let examTitle = '';
+    let examShortTitle = '';
     let selectedSector;
 
     let selector = [];
@@ -85,7 +86,8 @@
 
     function packageContent() {
         let data = {};
-        data.examTitle = examTitle; 
+        data.examTitle = examTitle;
+        data.examShortTitle = examShortTitle;
         if(!selectedSector && sectors && sectors.length != 0) {
             data.sectorId = sectors[0]._id;
         }
@@ -140,6 +142,7 @@
 
     function cleanUp() {
         examTitle = '';
+        examShortTitle = '';
 
         focus = null;
 
@@ -231,6 +234,15 @@
             {/each}
         {/if}
     </select>
+</div>
+<div class="titleandsector">
+    <label for="shortTitle">Exam Short Title: (For URLs and Navigation-Bar)</label>
+    <input 
+        id = "shortTitle" 
+        placeholder = "Less than 10 characters" 
+        type = "text"
+        bind:value = {examShortTitle}
+    >
 </div>
 <div class="container">
     <div class="selectors">
