@@ -8,7 +8,7 @@
     import ForgotSuccess from '../components/signinandup/ForgotSuccess.svelte';
 
     import { goto, stores } from '@sapper/app';
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
 
     const { session } = stores();
 
