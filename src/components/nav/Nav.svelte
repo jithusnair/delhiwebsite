@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
+	
+	import { navigationStore } from '../../store/navigation.js';
 
 	const dispatch = createEventDispatcher();
 
@@ -212,32 +214,109 @@
 </script>
 
 <style>
+	.nav-lock-scroll {
+		overflow: hidden;
+	}
+
+	.nav .nav-submenu ul .nav-submenu a:hover .link-arrow{
+		transform: rotateZ(-90deg);
+	}
+	.nav .nav-submenu a:hover .link-arrow{
+		transform: rotateX(180deg);
+	}
+
+	.sub-nav{
+		border-radius: 0 0 5px 5px;
+		background: rgb(34,39,73);
+	}
+
+	.sub-nav li {
+		margin-left: 1rem;
+	}
+
+	.sub-nav li ul li {
+		margin-left: 3rem;
+	}
+
+	.sub-nav li ul{
+		border-radius: 0.5rem 5px 5px;
+	}
 
 	.sub-nav li a{
 		min-width: 15rem;
+	}
+	.sub-nav li a .link-arrow{
+		position: absolute;
+		right: 15px;
+		top: 20px;
+	}
+
+	.crown-img {
+		margin-left: 4px;
+		width: 18px;
 	}
 
 	button {
 		font-size: 1.6rem;
 		line-height: 2.6rem;
-		color: var(--text);
+		color: #616161;
+	}
+
+	.link-arrow {
+		width: 11px;
+		margin-left: 10px;
+		transition: transform .5s ease;
 	}
 
 	.logo-img {
 		width: 4rem;
 		margin-right: 10px;
 	}
-
 	.logo-name {
 		text-transform: uppercase;
 		color: var(--white);
 		line-height: 2.3rem;
 	}
 
+	.academy {
+		letter-spacing: 0.83rem;
+	}
+
 	h3 {
 		font-family: Manrope, sans-serif;
 		font-size: 2.5rem;
 		line-height: 3.8rem;
+	}
+
+	.btn {
+		border: none;	
+		font-family: Manrope, sans-serif;
+		color: #425066;
+		font-weight: 700;
+		line-height: 2rem;
+		-webkit-appearance: none;
+		text-align: center;
+		outline: none;
+		cursor: pointer;
+	}
+
+	.btn:hover {
+		background-position:100% 0;
+		-moz-transition:all .4s ease-in-out;
+		-o-transition:all .4s ease-in-out;
+		-webkit-transition:all .4s ease-in-out;
+		transition:all .4s ease-in-out;
+	}
+
+	.gem-btn{
+		font-size: 1.5rem;
+		box-shadow: none;
+		border-radius: 3px;
+		width: 9.5rem;
+		padding: 5px 0;
+		color: black;
+		background:linear-gradient(to right,rgb(200,147,30), rgb(252,225,84));
+		transition: color .5s ease;
 	}
 
 	.signin-btn{
@@ -250,8 +329,8 @@
 		padding: 4px 0;
 		margin-left: 3rem;
 		background: transparent;
-		border: 1px solid var(--white);
-		color: var(--white);
+		border: 1px solid #fff;
+		color: #fff;
 	}
 
 	.header-btns{
@@ -295,8 +374,12 @@
 	.link{
 		font-size: 1.5rem;
 		padding: 1rem 2vw;
-		color: var(--white);
+		color: #fff;
 		transition: color .5s ease;
+	}
+
+	.link:hover{
+		color: rgb(136, 136, 247);
 	}
 
 	li {
@@ -325,12 +408,8 @@
 	.logo{
 		z-index: 999;
 		padding:1rem 2vw 1rem 0;
-		color: var(--white);;
+		color: #fff;;
 		display: flex;
-	}
-
-	.academy {
-		letter-spacing: 0.83rem;
 	}
 
 	.nav {
@@ -356,36 +435,21 @@
 
 	.nav-button{
 		display: none;
-		background: var(--nav-color);
+		background: rgb(34,39,73);
 		margin-left: auto;
 		color: white;
 		z-index: 1001;
 		}
 
 	.nav a,
+	.nav a:hover,
 	.nav a:active,
 	.nav a:visited {
 		display: block;
 		position: relative;
 	}
 
-	/* to avoid sticky hover problems
-
-        https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
-    
-    */
-    @media (hover: hover) {
-        .link:hover{
-			color: rgb(136, 136, 247);
-		}
-		.nav a:hover {
-			display: block;
-			position: relative;
-		}
-    }
-
 	@media only screen and (min-width: 1001px) {
-		
 		.nav {
 			display: block;
 			position: relative;
@@ -404,6 +468,28 @@
 
 		.nav ul {
 			display: block;
+		}
+
+		.nav ul ul {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			z-index: 901;
+		}
+
+		.nav ul ul ul {
+			top: 5px;
+			left: 95%;
+			z-index: 902;
+		}
+
+		.nav ul ul ul ul {
+			z-index: 903;
+		}
+
+		.nav ul ul ul ul ul {
+			z-index: 904;
 		}
 	}
 
@@ -428,11 +514,17 @@
 			width: 100%;
 			bottom: auto;
 		}
-		
+		.link-arrow{
+			position: absolute;
+			top: 15px;
+			right: 6%;
+		}
 		.link{
 			padding-left: 6%;
 		}
-		
+		.sub-nav li a .link-arrow{
+			right: 6%;
+		}
 		.header-btns{
 			margin-left: 0;
 			width: 100%;
@@ -441,9 +533,12 @@
 			align-items: center;
 			justify-content: center;
 		}
+		.nav .nav-submenu ul .nav-submenu a:hover .link-arrow{
+			transform: rotateX(180deg);
+		}
 	}
 </style>
-
+<!-- 
 <header class="header">
 	<a href="/" class="logo"><img src="images/nav/logo.png" alt="" class="logo-img">
 		<div class="logo-text">
@@ -465,6 +560,50 @@
 		</ul>
 		<div class="header-btns">
 			<button on:click={() => dispatch('navlogin')} class="btn signin-btn">Sign In</button>
+		</div>
+	</nav>
+	<div class="nav-button"><i class="fa fa-bars fa-3x"></i></div>
+</header> -->
+
+<header class="header">
+	<a href="/" class="logo"><img src="images/nav/logo.png" alt="" class="logo-img">
+		<div class="logo-text">
+			<h3 class="logo-name">Direction</h3>
+			<h5 class="logo-name"><span class="academy">Academy</span></h5>
+		</div>
+	</a>
+	<nav class="nav">
+		<ul class="nav-menu">
+			<li class="nav-list"><a href="/onlineclass" class="link">Online Classes</a></li>
+			{#if $navigationStore != 0}
+				<li class="nav-submenu nav-list"><a href="#" class="link">Exam<img src="images/nav/arrow.svg" alt="" class="link-arrow"></a>
+					<ul class="sub-nav">
+					{#each $navigationStore as sector}
+						<li class="nav-submenu nav-list"><a href="#" class="link">{sector.sectorTitle} <img src="images/nav/arrow.svg" alt="" class="link-arrow"></a>
+							<ul class="sub-nav">
+							{#each sector.exams as exam}
+								<li class="nav-list"><a href={"/exams/" + exam.examShortTitle} class="link">{exam.examShortTitle.toUpperCase()}</a></li>
+							{/each}
+							</ul>
+						</li>
+					{/each}
+					</ul>
+				</li>
+			{/if}
+			<li class="nav-list"><a href="/tests" class="link sublink">Tests</a></li>
+			<!-- <li class="nav-submenu nav-list"><a href="#" class="link">Resources<img src="images/nav/arrow.svg" alt="" class="link-arrow"></a>
+				<ul class="sub-nav">
+					<li class="nav-list"><a href="#" class="link">Practice</a></li>
+					<li class="nav-list"><a href="pages/gk/gk.html" class="link">Current Affairs and GK</a></li>
+				</ul>
+			</li>
+			<li class="nav-list"><a href="pages/blog/blog.html" class="link">Blog</a></li> -->
+			<li class="nav-list"><a href="/contact" class="link">Contact</a></li>
+		</ul>
+		<div class="header-btns">
+			<!-- <button class="btn gem-btn">Gems 
+				<img src="images/nav/crown.svg" alt="" class="crown-img"></button> -->
+			<button on:click={() => dispatch('login')} class="btn signin-btn">Sign In</button>
 		</div>
 	</nav>
 	<div class="nav-button"><i class="fa fa-bars fa-3x"></i></div>
