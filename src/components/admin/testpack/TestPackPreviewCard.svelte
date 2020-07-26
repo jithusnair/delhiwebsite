@@ -61,50 +61,7 @@
         width: 70%;
         margin-top: .5rem;
     }
-
-    .btn {
-        border: none;
-        border-radius: 50px;
-        box-shadow: 0 2px 3px 0 rgba(91,22,170,.3);
-        -webkit-appearance: none;
-        text-align: center;
-        color: var(--white);
-        font-size: 1.5rem;
-        font-weight: 700;
-        line-height: 2rem;
-        padding: 1.15rem 2.7rem;
-        background-image: linear-gradient(to right,rgb(34,39,73),rgb(33, 46, 129),rgb(33, 46, 129),rgb(34,39,73));
-        background-size: 300% 100%;
-        -moz-transition: all .4s ease-in-out;
-        -o-transition: all .4s ease-in-out;
-        -webkit-transition: all .4s ease-in-out;
-        transition: all .6s ease-in-out;
-    }
 </style>
-
-<!-- {#if data}
-    <div transition:scale|local={{duration:400}} class="price-card">
-        <div class="card-top">
-            <h5 class="plan-name">{data.testPackTitle}</h5>
-            <h2 class="price"><span>&#8377;</span>&nbsp;{data.price}</h2>
-            <hr class="card-seperator">
-            <div class="plan-features">
-                {#each data.features as feature}
-                    {#if feature}
-                        <div><i class="tick fa fa-check"></i>
-                            <p>&nbsp;&nbsp;</p>
-                            <p>{feature}</p>
-                        </div>
-                    {/if}
-                {/each}
-            </div>
-        </div>
-        <div class="card-bottom">
-            <button class="buy-btn btn">Buy&nbsp;Now</button>
-            <p class="validity">Validity: {data.validity} days</p>
-        </div>
-    </div>
-{/if} -->
 
 {#if data}
     <div transition:scale|local={{duration:400}} class="card">

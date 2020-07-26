@@ -8,22 +8,22 @@
 }
 
 button {
-    border:none;
+    border: none;
     border-radius: 50px;
     box-shadow: 0 2px 3px 0 rgba(91,22,170,.3);
-    -webkit-appearance:none;
-    text-align:center;
-    color: white;
+    -webkit-appearance: none;
+    text-align: center;
+    color: var(--white);
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 2rem;
     padding: 1.15rem 2.7rem;
-    background-image:linear-gradient(to right,rgb(208, 55, 255),rgb(91, 72, 255),rgb(91, 72, 255),rgb(208, 55, 255));
-    background-size:300% 100%;
-    -moz-transition:all .4s ease-in-out;
-    -o-transition:all .4s ease-in-out;
-    -webkit-transition:all .4s ease-in-out;
-    transition:all .4s ease-in-out;
+    background-image: linear-gradient(to right,rgb(34,39,73),rgb(33, 46, 129),rgb(33, 46, 129),rgb(34,39,73));
+    background-size: 300% 100%;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .6s ease-in-out;
 }
 
 button:hover, button:focus {
@@ -76,6 +76,7 @@ input:focus{
     --black-color: rgb(66, 65, 65);
     --ruler-backgroud: rgb(87, 80, 80,0.3);
     --quiz-question-color: rgb(82, 79, 79);
+    --dark-blue: #222749;
 }
 
 html{
@@ -93,7 +94,7 @@ body{
     height: 100%;
 }
 
-h1,h2,h3,h4,h5,h6,.btn{
+h1,h2,h3,h4,h5,h6{
     font-family: Manrope, sans-serif;
     color:var(--heading);
 }
@@ -170,33 +171,6 @@ hr{
     height: .15rem;
     border-radius: 20px;
     border:none;
-}
-
-
-.btn {
-    border:none;
-    border-radius: 50px;
-    box-shadow: 0 2px 3px 0 rgba(91,22,170,.3);
-    -webkit-appearance:none;
-    text-align:center;
-    color:var(--white);
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 2rem;
-    padding: 1.15rem 2.7rem;
-    background-image:linear-gradient(to right,rgb(208, 55, 255),rgb(91, 72, 255),rgb(91, 72, 255),rgb(208, 55, 255));
-    background-size:300% 100%;
-    -moz-transition:all .4s ease-in-out;
-    -o-transition:all .4s ease-in-out;
-    -webkit-transition:all .4s ease-in-out;
-    transition:all .4s ease-in-out;
-}
-.btn:hover {
-    background-position:100% 0;
-    -moz-transition:all .4s ease-in-out;
-    -o-transition:all .4s ease-in-out;
-    -webkit-transition:all .4s ease-in-out;
-    transition:all .4s ease-in-out;
 }
 
 .dropdown{
