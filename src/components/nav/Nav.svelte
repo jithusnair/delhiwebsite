@@ -603,7 +603,7 @@
 		<div class="header-btns">
 			<!-- <button class="btn gem-btn">Gems 
 				<img src="images/nav/crown.svg" alt="" class="crown-img"></button> -->
-			<button on:click={() => dispatch('login')} class="btn signin-btn">Sign In</button>
+			<button on:click={() => dispatch('navlogin')} class="btn signin-btn">Sign In</button>
 		</div>
 	</nav>
 	<div class="nav-button"><i class="fa fa-bars fa-3x"></i></div>
