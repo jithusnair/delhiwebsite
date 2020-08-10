@@ -3,10 +3,13 @@ var mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
     orderId: String,
     courseCollection: {type: String, required: true},
-    amount: Number,
+    amount: Number, // final amount with gst
+    courseTitle: String,
+    coursePrice: Number, // price without gst
     courseId: { 
         type: mongoose.Schema.Types.ObjectId, 
-        required: true, ref: 'VideoCourseDetail'
+        required: true,
+        //  ref: 'VideoCourseDetail'
     },
     courseValidity: Number, //days the course will be valid from the date of purchase
     userId: { 
@@ -21,7 +24,8 @@ const orderSchema = new mongoose.Schema({
     // the number should be unique for every financial year -
     // meaning if the date is April 1, the invoice number should reset.
     invoice: String, 
-    lastUpdated: {type: Date, required: true}
+    lastUpdated: {type: Date, required: true},
+    validTill: Date,
 });
 
 module.exports = mongoose.model('Order', orderSchema);
