@@ -7,6 +7,8 @@
 
     export let display = false;
 
+    export let collection;
+
     export let orderDetails;
     export let courseTitle;
 
@@ -56,7 +58,8 @@
 <Modal displayModal={display}>
     <div transition:scale|local={{duration: 500}} class="paymentModal">
         <h3>Thank You</h3>
-        <p>Thank you for purchasing <strong>{courseTitle}</strong>. <br>The course will be valid till
+        <p>Thank you for purchasing <strong>{courseTitle}</strong>. <br>
+        The {collection} will be valid till
         {lastValidDate.format("dddd, MMMM Do YYYY, h:mm:ss a")} 
         </p>
         <button on:click>Close</button>
