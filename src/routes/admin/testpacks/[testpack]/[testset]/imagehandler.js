@@ -1,4 +1,4 @@
-import { upload } from '../../../../../_helpers/s3NormalBucket';
+import { upload, deleteMultiple } from '../../../../../_helpers/s3NormalBucket';
 
 export async function post(req, res, next) {
     let message;
@@ -31,4 +31,19 @@ export async function post(req, res, next) {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(message));
     });
+}
+
+export async function del(req, res, next) {
+    await deleteImages(req.body.imgArr);
+}
+
+async function deleteImages(imagesToDelete) {
+    if(imagesToDelete.length != 0) {
+        let imageKeysArray = [];
+        for (let i = 0; i < imagesToDelete.length; i++) {
+            let filename = imagesToDelete[i].split('/').pop()
+            imageKeysArray.push({Key: filename});
+        }
+        await deleteMultiple(imageKeysArray);
+    }
 }
