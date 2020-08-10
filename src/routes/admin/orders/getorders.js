@@ -11,7 +11,6 @@ export async function get(req, res, next) {
     }
 
     Order.find({})
-    .populate('courseId', 'courseTitle courseValidity')
     .populate('userId', 'fullname')
     .exec()
     .then((docs)=>{

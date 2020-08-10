@@ -15,51 +15,48 @@ export async function post(req, res, next) {
         return
     }
     let videoDetails;
-    let stillValidPurchase;
+    let stillValidPurchase = false;
     let purchased;
     // first confirm if the user has a paid and still valid course.
     // if not send the videodata without the links
-    Order.find({userId: req.user._id, courseId: req.body.courseId, status: 'captured'})
+    Order.find({
+            userId: req.user._id, 
+            courseId: req.body.courseId, 
+            status: 'captured',
+            validTill: { $gte: new Date()}
+        })
     .exec()
     .then((orders)=>{
         // Check validity - Ideally there should only be one valid course.
-        if(orders) {
-            stillValidPurchase = 
-                orders.filter((item)=> {
-                    let lastUpdated = moment(item.lastUpdated);
-                    let validTill = 
-                        lastUpdated.add(item.courseValidity+1, 'days').startOf('day')
-                    let currentlyValid = validTill - moment() > 0
-                    return currentlyValid
-                })
-        }
-        return Video.find({courseId: req.body.courseId}).exec()
-    })
-    .then((videos)=>{
-        let newVideos;
-        // if there are still valid purchases send the full videos
-        if (stillValidPurchase && stillValidPurchase.length>0) {
-            videoDetails = videos;
+        if(orders && orders.length != 0) {
+            stillValidPurchase = true;
             purchased = true;
-        }
-        // Else there are no valid purchases and hence should return
-        // videos without the links
-        else {
-            newVideos = videos.map((item)=>{
-                let copiedItem = JSON.parse(JSON.stringify(item));
-                copiedItem.link = null;
-                return copiedItem;
-            })
-            videoDetails = newVideos;
+        } else {
+            stillValidPurchase = false;
             purchased = false;
         }
-        // only return the published courses
+
+        if(stillValidPurchase) {
+            return Video.find({courseId: req.body.courseId}).exec()
+        } else {
+            return Video.find({courseId: req.body.courseId})
+            .select('courseId title description') //removes video links
+            .exec()
+        }
+    })
+    .then((videos)=>{
+        // if videos with the given courseId does not exist
+        if(!videos) {
+            let e = Error('No videos found');
+            e.name = 'VideosNotFoundError';
+            throw e;
+        }
+
+        videoDetails = videos;
         return VideoCourseDetail.findOne({_id:req.body.courseId, published: true}).exec()
     })
     .then((course)=>{
-        // There is a chance that a random request might come where the course and the
-        // videos do exist, but the course was not published. Therefore, that scenario
-        // needs to be handled
+        // if course doesn't exist
         if(!course) {
             let e = Error('No such course')
             e.name = 'CourseNotFoundError';
@@ -70,7 +67,7 @@ export async function post(req, res, next) {
         res.end(JSON.stringify(message));
     })
     .catch((error)=>{
-        if(error.name == 'CourseNotFoundError') {
+        if(error.name == 'CourseNotFoundError' || 'VideosNotFoundError') {
             message = {success: false, err: 'Course not found'}
         }
         console.log(error);

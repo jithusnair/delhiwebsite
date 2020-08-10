@@ -26,31 +26,20 @@ export async function get(req, res, next) {
         return;
     }
     // Check if the user has bought the particular course before
-    Order.find({ userId: req.user._id, courseId: course, status: 'captured'}).exec()
+    Order.find({
+            userId: req.user._id, 
+            courseId: req.body.courseId, 
+            status: 'captured',
+            validTill: { $gte: new Date()}
+    }).exec()
     .then((paidList)=>{
-        if(paidList.length < 0) {
+        if( paidList && paidList.length == 0) {
             return
         }
-        else {
-            // Check if still valid purchases exist.
-            // In filtering, if the course was paid, the time it was paid
-            // will be the lastupdated date and also it is from that date
-            // the valid-till date is calculated.
-            let stillValidPurchases = 
-                paidList.filter((item)=> {
-                    let lastUpdated = moment(item.lastUpdated);
-                    let validTill = 
-                        lastUpdated.add(item.courseValidity+1, 'days').startOf('day')
-                    let currentlyValid = validTill - moment() > 0
-                    return currentlyValid;
-                })
-            if (stillValidPurchases.length > 0) {
-                let e = new Error('Already purchased');
-                e.name = 'DuplicatePurchaseError'
-                throw e;
-            }
-            else return
-        }
+        
+        let e = new Error('Already purchased');
+        e.name = 'DuplicatePurchaseError'
+        throw e;
     })
     .then(()=>VideoCourseDetail.findById(course).exec())
     // if no such duplicate purchase exist, continue creating the new order
@@ -70,10 +59,12 @@ export async function get(req, res, next) {
         }
 
         razorpayOrder = await razorpay.orders.create(orderOptions);
-        
+
         let newOrder = {
             orderId: razorpayOrder.id,
             amount: razorpayOrder.amount,
+            courseTitle: courseDetail.courseTitle,
+            coursePrice: courseDetail.price,
             courseCollection: "VideoCourseDetail",
             courseId: courseDetail._id,
             courseValidity: courseDetail.courseValidity,
@@ -193,10 +184,10 @@ export async function post(req, res, next) {
                 // first send a receipt/invoice to customer
                 orderFromDB = order;
                 
-                subTotal = parseInt(order.courseId.price);
-                // gstAmount adjusted to two decimal places
-                gstAmount = Math.floor(((subTotal*100*18)/100))/100;
-                totalPrice = subTotal + gstAmount;
+                totalPrice = orderFromDB.amount/100;
+                subTotal = parseInt(orderFromDB.coursePrice);
+
+                gstAmount = totalPrice - subTotal;
                 
                 // first get all orders that were captured and also 
                 // lastupdated date > April 1 and sort them in by date
@@ -213,7 +204,7 @@ export async function post(req, res, next) {
             //send a mail
             invoiceData = {
                 email: orderFromDB.userId.email,
-                courseName: orderFromDB.courseId.courseTitle,
+                courseName: orderFromDB.courseTitle,
                 subTotal: subTotal,
                 gstAmount: gstAmount,
                 totalAmount: totalPrice,
@@ -227,13 +218,15 @@ export async function post(req, res, next) {
         })
         .then(()=>{
             // update the order
+            let lastUpdated = moment(orderFromDB.lastUpdated);
+            let validTill = lastUpdated.add(orderFromDB.courseValidity+1, 'days').startOf('day');
             return Order.update( {orderId: req.body.razorpay_order_id},
                 {
                     status: 'captured', 
                     lastUpdated: new Date(), 
-                    invoice: invoiceData.invoiceNumber
-                }
-                ).exec()
+                    invoice: invoiceData.invoiceNumber,
+                    validTill: new Date(validTill),
+                }).exec()
         })
         .then(()=>{
             if(!message) {

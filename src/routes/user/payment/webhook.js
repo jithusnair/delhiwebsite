@@ -39,11 +39,11 @@ export async function post(req, res, next) {
             }
             else {
                 orderFromDB = order;
+                
+                totalPrice = orderFromDB.amount;
+                subTotal = parseInt(orderFromDB.coursePrice);
 
-                subTotal = parseInt(order.courseId.price);
-                // gstAmount adjusted to two decimal places
-                gstAmount = Math.floor(((subTotal*100*18)/100))/100;
-                totalPrice = subTotal + gstAmount;
+                gstAmount = totalPrice - subTotal;
                 
                 // first get all orders that were captured and also 
                 // lastupdated date > April 1 and sort them in by date
@@ -60,7 +60,7 @@ export async function post(req, res, next) {
             //send a mail
             invoiceData = {
                 email: orderFromDB.userId.email,
-                courseName: orderFromDB.courseId.courseTitle,
+                courseName: orderFromDB.courseTitle,
                 subTotal: subTotal,
                 gstAmount: gstAmount,
                 totalAmount: totalPrice,
@@ -73,12 +73,15 @@ export async function post(req, res, next) {
             return invoice(invoiceData);
         })
         .then(()=> {
+            let lastUpdated = moment(orderFromDB.lastUpdated);
+            let validTill = lastUpdated.add(orderFromDB.courseValidity+1, 'days').startOf('day');
             // update the order
             return Order.update( {orderId: req.body.razorpay_order_id},
                 {
                     status: 'captured', 
                     lastUpdated: new Date(), 
-                    invoice: invoiceData.invoiceNumber
+                    invoice: invoiceData.invoiceNumber,
+                    validTill: new Date(validTill),
                 }
                 ).exec()
         })
