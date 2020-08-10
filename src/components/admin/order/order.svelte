@@ -110,4 +110,3 @@
         </div>
     </div>
 </div>
-<!-- {moment(data.lastUpdated).format("MMM Do YYYY, h:mm:ss a")} -->
