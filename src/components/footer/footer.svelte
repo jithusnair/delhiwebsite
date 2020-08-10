@@ -6,6 +6,8 @@
     .footer{
         background-color: var(--nav-color);
         width: 100%;
+        position: absolute;
+        bottom: -192px;
     }
 
     .footer a,.footer p{
@@ -41,6 +43,7 @@
     @media only screen and (max-width: 1000px) {
         .footer{
             padding-top: 2rem;
+            bottom: -315px;
         }
 
         .footer-top{

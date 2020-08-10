@@ -51,8 +51,9 @@
 
 <style>
 	main {
-		min-height: 100%;		
+		min-height: calc(100vh + 191px);
 		padding-top: 6rem;
+		position: relative;
 	}
 </style>
 
@@ -67,7 +68,8 @@
 		{#if 
 			segment !== 'admin' && segment !== 'user' && 
 			segment !== 'petition' && segment !== 'backdoor' &&
-			segment !== 'onlineclass' && segment
+			segment !== 'onlineclass' && segment !== 'tests' &&
+			segment
 		}
 		<NavPlusLoginSignup
 			{displayLogIn}
