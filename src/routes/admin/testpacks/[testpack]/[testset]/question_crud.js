@@ -62,10 +62,20 @@ export async function post(req, res, next) {
         obj.passageNumber = req.body.passageNumber;
         obj.passage = req.body.passage;
         // if this question is a continuation of previous comprehension question
-        
+        if(req.body.hindiVersion) {
+            obj.passageHindi = req.body.passageHindi; 
+        }
         if(req.body.compImages) {
             obj.compImages = req.body.compImages;
         }
+    }
+
+    if(req.body.hindiVersion) {
+        obj.hindiVersion = req.body.hindiVersion;
+        obj.questionHindi = req.body.questionHindi;
+        obj.optionsHindiHtml = req.body.optionsHindiHtml;
+        obj.optionsHindi = req.body.optionsHindi;
+        obj.detailedAnsHindi = req.body.detailedAnsHindi;
     }
 
     if(req.body.quesImages) { 
@@ -145,6 +155,17 @@ export async function put(req, res, next) {
     if(req.body.detailedAnsImages) obj.detailedAnsImages = req.body.detailedAnsImages;
     obj.detailedAns = req.body.detailedAns;
 
+    if(req.body.hindiVersion) {
+        obj.hindiVersion = req.body.hindiVersion;
+        obj.questionHindi = req.body.questionHindi;
+        obj.optionsHindi = req.body.optionsHindi;
+        obj.optionsHindiHtml = req.body.optionsHindiHtml
+        obj.detailedAnsHindi = req.body.detailedAnsHindi;
+        if(req.body.comprehension) {
+            obj.passageHindi = req.body.passageHindi;
+        }
+    }
+
     let allImagesToBeDeleted = [];
     if(req.body.compImagesToBeDeleted) {
         allImagesToBeDeleted.push(...req.body.compImagesToBeDeleted);
@@ -162,6 +183,9 @@ export async function put(req, res, next) {
     if(req.body.passageChanged) {
         let findBy = {subjectId: obj.subjectId, passageNumber: obj.passageNumber};
         let updateFields = {compImages: obj.compImages, passage: obj.passage};
+        if(req.body.hindiVersion) {
+            updateFields.passageHindi = obj.passageHindi;
+        } 
         passageChanged = true;
         dbAction = Question.updateMany(findBy, updateFields);
     }
@@ -222,7 +246,6 @@ export async function del(req, res, next) {
 
     if(req.body.otherImagesToBeDeleted) {
         await deleteImages(req.body.otherImagesToBeDeleted);
-        console.log('Other Images deleted');
     }
 
     dbAction.exec()
@@ -230,7 +253,6 @@ export async function del(req, res, next) {
         if(req.body.comprehension) {
             if(docs.length == 1 && req.body.compImagesToBeDeleted) {
                 await deleteImages(req.body.compImagesToBeDeleted);
-                console.log('Passage images deleted');
             }
             return Question.findByIdAndDelete(req.body._id);
         }
@@ -265,6 +287,6 @@ async function deleteImages(imagesToDelete) {
             let filename = imagesToDelete[i].split('/').pop()
             imageKeysArray.push({Key: filename});
         }
-        let response = await deleteMultiple(imageKeysArray);
+        await deleteMultiple(imageKeysArray);
     }
 }
