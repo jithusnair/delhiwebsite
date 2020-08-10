@@ -1,6 +1,7 @@
 <script>
     import QuestionNew from './QuestionNew.svelte';
     import DisplayEditDeleteModal from './DisplayEditDeleteModal.svelte';
+    import Instructions from './Instructions.svelte';
     import { questionStore } from '../../../../store/question.js';
     import {
         questionDisplay,
@@ -17,6 +18,7 @@
     let subjectsandquestions;
 
     let display = false;
+    let displayInstructions = false;
 
     let deletedQuestion = false;
     let updatedQuestion = false;
@@ -100,16 +102,12 @@
 </script>
 
 <style>
-    .btn {
+    .btn, .instructions {
         position: absolute;
-        top: 2rem;
-        right: 4rem;
         text-align:center;
-        color: white;
         font-size: 1.5rem;
         font-weight: 700;
         padding: 1.15rem 2.7rem;
-        background: darkgreen;
         border: none;
         border-radius: 5px;
         box-shadow: none;
@@ -117,10 +115,29 @@
         outline: 0;
         z-index: 1;
     }
+    
+    .btn {
+        background: darkgreen;
+        color: white;
+        top: 2rem;
+        right: 4rem;
+    }
 
     .btn:hover {
         color: black;
         background: lightgreen;
+    }
+
+    .instructions {
+        background: rgb(251, 255, 2);
+        color: black;
+        top: 2rem;
+        right: 30rem;
+    }
+    
+    .instructions:hover {
+        color: white;
+        background:rgb(141, 143, 40);
     }
 </style>
 
@@ -129,6 +146,13 @@
     on:click = {() => display = true}
 >
     Questions In Database
+</button>
+
+<button 
+    class="instructions"
+    on:click = {() => displayInstructions = true}
+>
+    Instructions
 </button>
 
 <QuestionNew 
@@ -152,4 +176,9 @@
         }
     }
     on:close = {() => display = false}
+/>
+
+<Instructions
+    {displayInstructions}
+    on:close = {() => displayInstructions = false}
 />
