@@ -5,7 +5,7 @@
 
     import { fetchWithTimeout } from '../../../../_helpers/fetchWithTimeout.js';
 
-    import { onMount, createEventDispatcher } from 'svelte';
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
     import moment from 'moment';
     
@@ -16,23 +16,29 @@
     
     let id;
 
+    let hindiVersion = false;
     let qnNumber;
     let comprehension = false;
     let sameAsBefore = false; // indicates if the comprehension passage questions
                               // are still being uploaded so that images may not be
                               // duplicated in s3.
     let passageNumber;
-    let passage = ''; // should exist only if comprehension is true
+    let passage = '';
+    let passageHindi = '' // should exist only if comprehension is true
     let question = '';
+    let questionHindi = '';
     let optionsAreImages = false;
     let optionsHtml = '';
+    let optionsHindiHtml = '';
     let correctAns; // as the index of 'options'
     let detailedAns = '';
+    let detailedAnsHindi = ''; 
     let compImages = []; // array with links to passage-images in S3
     let quesImages = []; // array with links to question-images in S3
     let detailedAnsImages = [];
     let options = []; // array of image-links OR just text based options
-    
+    let optionsHindi = [];
+
     let allImagesUploaded = [];
 
     let selectedSubject = $subjectStore[0]._id;
@@ -62,6 +68,7 @@
 
     let editorSettingsGeneral = {
         btns: [
+            ['viewHTML'],
             ['undo', 'redo'], // Only supported in Blink browsers
             ['formatting'],
             ['strong', 'em', 'del'],
@@ -85,6 +92,7 @@
 
     let editorSettingsForOptions = {
         btns: [
+            ['viewHTML'],
             ['undo', 'redo'], // Only supported in Blink browsers
             ['formatting'],
             ['strong', 'em', 'del'],
@@ -103,12 +111,44 @@
             }
         }
     }
+
+    let editorSettingsHindi = {
+        btns: [
+            ['viewHTML'],
+            ['undo', 'redo'], // Only supported in Blink browsers
+            ['formatting'],
+            ['strong', 'em', 'del'],
+            ['superscript', 'subscript'],
+            ['unorderedList', 'orderedList'],
+            ['table'],
+            ['mathml'],
+        ],
+        resetCss: true,
+        tagsToRemove: ['script'],
+        removeformatPasted: true,
+        semantic: true,
+    }
+
+    let editorSettingsHindiOptions = {
+        btns: [
+            ['viewHTML'],
+            ['undo', 'redo'], // Only supported in Blink browsers
+            ['formatting'],
+            ['strong', 'em', 'del'],
+            ['superscript', 'subscript'],
+            ['mathml']
+        ],
+        resetCss: true,
+        tagsToRemove: ['script'],
+        removeformatPasted: true,
+        semantic: true,
+    }
     
     $:  if(saveError) {
             setTimeout(() => {
                 saveError = false;
             }, 10000);
-        }
+    }
     
     onMount(()=>{
         setupEditor();
@@ -143,15 +183,57 @@
             });
     }
 
+    function hindiEditorInitialise() {
+        if(hindiVersion) {
+            jQuery("#questionHindi").trumbowyg(editorSettingsHindi)
+            .on('tbwchange', function() { 
+                questionHindi = jQuery('#questionHindi').trumbowyg('html');
+            });
+            jQuery("#optionsHindi").trumbowyg(editorSettingsHindiOptions)
+            .on('tbwchange', function() {
+                optionsHindiHtml = jQuery('#optionsHindi').trumbowyg('html');
+                let newImgArr = imageSrcParsing(optionsHtml);
+                imagesNewAndOld(allImagesUploaded, newImgArr);
+            });
+            jQuery("#detailedAnsHindi").trumbowyg(editorSettingsHindi)
+            .on('tbwchange', function() {
+                detailedAnsHindi = jQuery('#detailedAnsHindi').trumbowyg('html');
+                let newImgArr = imageSrcParsing(detailedAns);
+                imagesNewAndOld(allImagesUploaded, newImgArr);
+            });
+
+            // copy the english contents first
+            jQuery("#questionHindi").trumbowyg('html', question);
+            jQuery("#optionsHindi").trumbowyg('html', optionsHtml);
+            jQuery("#detailedAnsHindi").trumbowyg('html', detailedAns);
+
+            if(comprehension) {
+                jQuery('#passageHindi').trumbowyg(editorSettingsHindi)
+                .on('tbwchange', function(){ 
+                    passageHindi = jQuery('#passageHindi').trumbowyg('html');
+                });
+
+                // copy passage content first
+                jQuery("#passageHindi").trumbowyg('html', passage);
+            }
+        }
+        else {
+            questionHindi = '';
+            optionsHindi = '';
+            detailedAnsHindi = '';
+            passageHindi = '';
+        }
+    }
+
     function passageEditor() {
         jQuery('#passage').trumbowyg(editorSettingsGeneral)
-            .on('tbwchange', function(){ 
-                passage = jQuery('#passage').trumbowyg('html');
-                if(!sameAsBefore) {
-                    let newImgArr = imageSrcParsing(passage);
-                    imagesNewAndOld(allImagesUploaded, newImgArr);
-                }
-            });
+        .on('tbwchange', function(){ 
+            passage = jQuery('#passage').trumbowyg('html');
+            if(!sameAsBefore) {
+                let newImgArr = imageSrcParsing(passage);
+                imagesNewAndOld(allImagesUploaded, newImgArr);
+            }
+        });
     }
 
     function imagesNewAndOld(oldArray, newArray) {
@@ -165,9 +247,9 @@
     }
 
     // this function parses the text-options from the html received from editor
-    function optionTextParsing() {
+    function optionTextParsing(html) {
         let parser = new DOMParser();
-        let parsedHtml = parser.parseFromString(optionsHtml, 'text/html');
+        let parsedHtml = parser.parseFromString(html, 'text/html');
 
         let paragraphs = parsedHtml.getElementsByTagName("p");
         options = [];
@@ -200,10 +282,21 @@
         data.subjectId = selectedSubject;
         data.qnNumber = qnNumber;
 
+        data.hindiVersion = hindiVersion;
+
+        if(hindiVersion) {
+            data.questionHindi = questionHindi;
+            data.optionsHindi = optionsHindi;
+            data.detailedAnsHindi = detailedAnsHindi;
+        }
+
         data.comprehension = comprehension;
         if(comprehension) {
             data.passageNumber = passageNumber;
             data.passage = passage;
+            if(hindiVersion) {
+                data.passageHindi = passageHindi;
+            }
         } else {
             sameAsBefore = false;
         }
@@ -213,7 +306,11 @@
         data.optionsAreImages = optionsAreImages;
         data.optionsHtml = optionsHtml;
         if(!optionsAreImages) {
-            data.options = optionTextParsing();
+            data.options = optionTextParsing(optionsHtml);
+            if(hindiVersion) {
+                data.optionsHindi = optionTextParsing(optionsHindiHtml);
+                data.optionsHindiHtml = optionsHindiHtml;
+            }
         }
 
         data.correctAns = correctAns;
@@ -236,6 +333,7 @@
 
         if(optionsAreImages) {
             data.options = imageSrcParsing(optionsHtml);
+            data.optionsHindi = options;
             if(data.options) imagesFromEditor.push(...data.options);
         }
 
@@ -317,21 +415,68 @@
             passage = '';
             passageNumber = null;
             sameAsBefore = false;
+            if(hindiVersion) {
+                passageHindi = '';
+                jQuery("#passageHindi").trumbowyg('empty');
+            }
             jQuery("#passage").trumbowyg('empty');
         } else {
             sameAsBefore = true;
         }
         quesImages = []; 
         question = '';
+        questionHindi = '';
         optionsAreImages = false;
         options = [];
+        optionsHindi = [];
         optionsHtml = '';
+        optionsHindiHtml = '';
         correctAns = 0;
         detailedAns = '';
+        detailedAnsHindi = '';
 
         jQuery("#question").trumbowyg('empty');
         jQuery("#options").trumbowyg('empty');
         jQuery("#detailedAns").trumbowyg('empty');
+
+        jQuery("#questionHindi").trumbowyg('empty');
+        jQuery("#optionsHindi").trumbowyg('empty');
+        jQuery("#detailedAnsHindi").trumbowyg('empty');
+    }
+
+    onDestroy(async () => {
+        if(allImagesUploaded.length != 0) {
+            let link = `/admin/testpacks/${testpack}/${testset}/imagehandler?del=true`
+            await fetch(link, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({imgArr: allImagesUploaded}),
+            })
+        }
+    })
+
+    function beforeUnload() {
+        // for chrome
+        event.returnValue = '...';
+        // more compatibility
+        return '...';
+    }
+
+    async function onUnload() {
+        if(allImagesUploaded.length != 0) {
+            let link = `/admin/testpacks/${testpack}/${testset}/imagehandler`
+            await fetch(link, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({imgArr: allImagesUploaded}),
+            })
+        }
     }
 </script>
 
@@ -381,6 +526,8 @@
     }
 </style>
 
+<svelte:window on:beforeunload|preventDefault={beforeUnload} on:unload={onUnload}/>
+
 <div class="new-course-input">
     <Error showErr={saveError? true: false}>
         <p class="error-message">{saveError}</p>
@@ -414,6 +561,15 @@
         >
         <label for="comprehension">Comprehension</label>
     </div>
+    <div class="feature-input">
+        <input 
+            bind:checked={hindiVersion} 
+            id="hindiVersion" 
+            type="checkbox"
+            on:change = {hindiEditorInitialise}
+        >
+        <label for="hindiVersion">Add Hindi version of the question</label>
+    </div>
     {#if comprehension}
         <div class="feature-input">
             <label for="passageNumber">Passage Number<span>*</span></label>
@@ -425,15 +581,27 @@
             >
         </div>
         <div>
-            <h4>Passage</h4>
+            <h4>Passage in English</h4>
             <div id="passage" placeholder="Type in a passage"></div>
         </div>
+        {#if hindiVersion}
+            <div>
+                <h4>Passage in Hindi</h4>
+                <div id="passageHindi" placeholder="Type in a passage"></div>
+            </div>
+        {/if}
     {/if}
 
     <div>
-        <h4>Question<span>*</span></h4>
+        <h4>Question in English<span>*</span></h4>
         <div id="question" placeholder="Type in a question"></div>
     </div>
+    {#if hindiVersion}
+        <div>
+            <h4>Question in Hindi<span>*</span></h4>
+            <div id="questionHindi" placeholder="Type in a question"></div>
+        </div>
+    {/if}
 
     <div class="feature-input">
         <input 
@@ -455,6 +623,18 @@
         >
         </div>
     </div>
+    {#if hindiVersion}
+        <div>
+            <h4>Options in Hindi<span>*</span></h4>
+            <div 
+                id="optionsHindi"
+                placeholder = {
+                    optionsAreImages?"Insert images as options in order":
+                    "Type in each option as a paragraph and press enter-key"}
+            >
+            </div>
+        </div>
+    {/if}
     <div class="feature-input">
         <label for="correctAns">Correct Answer<span>*</span></label>
         <input 
@@ -472,7 +652,16 @@
         >
         </div>
     </div>
-    
+    {#if hindiVersion}
+        <div>
+            <h4>Detailed Answer in Hindi<span>*</span></h4>
+            <div 
+                id="detailedAnsHindi"
+                placeholder= "Type in the detailed answer for this question"
+            >
+            </div>
+        </div>
+    {/if}
     <div class="saving">
         <button 
             disabled={!validInputs} 
