@@ -11,10 +11,14 @@ export async function get(req, res, next) {
             { $unset : [ "sectorId",] } 
         ])
         .lookup({
-                from: "testpacks",
-                localField: "_id",
-                foreignField: "examId",
-                as: "testPacks"
+            from: "testpacks",
+            let: { id: "$_id" },
+            pipeline: [
+                { $match:{ $expr:{ $eq: [ "$examId",  "$$id" ] },},},
+                { $match:{ published: true } },
+                { $project: { __v: 0,} }
+            ],
+            as: "testPacks"
         })
         .then((docs)=> {
             // first remove all the links from the video details

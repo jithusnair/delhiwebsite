@@ -15,7 +15,7 @@ export async function get(req, res, next) {
     })
     .then((docs)=> {
         exams = docs;
-        return TestPacks.find({}).exec();
+        return TestPacks.find({published:true}).exec();
     })
     .then((docs)=> {        
         message = {success: true, sectors: sectors, exams: exams, testPacks: docs};
