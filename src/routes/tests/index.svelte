@@ -86,7 +86,10 @@
         display: flex;
         flex-direction: row;
         background-color: var(--body-background);
+        position: relative;
+        align-items: center;
     }
+
     .main-content{
         width: 50vw;
         display: flex;
@@ -103,18 +106,7 @@
     }
 
     .hero-img{
-        position: absolute;
         width: 55rem;
-        top: 54%;
-        transform: translateY(-50%);
-        left: 58%;
-    }
-
-    .explore-btn{
-        width: 15rem;
-        margin: 3rem 0;
-        border-radius: 5px;
-        box-shadow: none;
     }
 
     .testpacks {
@@ -136,32 +128,32 @@
     }
 
     @media screen and (max-width: 850px){
-        .hero-img{
-            top: 6rem;
-            left: 50%;
-            transform: translateX(-50%);
+        .hero-img {
             height: 40vh;
             width: auto;
         }
-        .hero-section{
-            flex-direction: column;
+        
+        .hero-section {
+            flex-direction: column-reverse;
             align-items: center;
             justify-content: center;
         }
-        .main-content{
-            margin-top: 50vh;
+
+        .main-content {
             width: 100%;
             align-items: center;
             text-align: center;
             justify-content: center;
             padding:1rem 0 9rem 0;
         }
-        .heading{
+
+        .heading {
             font-size: 3.5rem;
             line-height: normal;
             padding:0 0 2.5rem 0;
         }
-        .explore-btn{
+
+        .explore-btn {
             margin: 2.5rem 0;
         }
     }

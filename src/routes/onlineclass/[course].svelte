@@ -150,8 +150,10 @@
 			<h2>{courseDoc.courseTitle}</h2>
 			<DemoPlayr videoLink={courseDoc.demoVideo} />
 				{#if launched>0}
+				<div>
 					<h2>Classes Will Launch In</h2>
 					<Timer {timer}/>
+				</div>
 				{:else}
 					<h2>Classes</h2>
 					<Videos docs = {dbVideoData} />
