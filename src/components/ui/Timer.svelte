@@ -8,7 +8,7 @@
         grid-template-columns: 15rem 10rem 10rem 10rem;
         grid-gap: 1rem;
         margin: 3rem auto;
-        width: 70%;
+        width: 100%;
     }
     .timeContainer, .dayContainer {
         display: flex;
