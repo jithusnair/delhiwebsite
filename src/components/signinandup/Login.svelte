@@ -45,12 +45,17 @@
             body: JSON.stringify(data),
             },
             30000)
-            .then(response => {
-                return response.json()
-            })
+            .then(response => response.json())
             .then(data => {
                 if(data.success) {
+                    if(data.user.isAdmin) {
+                        loading = false;
+                        loginErr = 'You have a different place to login';
+                        logout();
+                        return;
+                    }
                     session.set({user:{...data.user}});
+                    cleanUpClose();
                     goto(gotoURL);
                 }
                 else if (data.loginErr) {
@@ -74,6 +79,30 @@
                     console.error('Error:', error);
                 }
             });
+    }
+
+    function logout() {
+        fetchWithTimeout('/user/account/loginlogout', {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', 
+        },
+        30000)
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                return;
+            }
+        })
+        .catch((error) => {
+            if (error.name === 'AbortError') {
+                logoutErr = 'Server taking too long to respond! Request Timed out';
+            }
+            console.error('Error:', error);
+        });
     }
 
     function cleanUpClose () {
