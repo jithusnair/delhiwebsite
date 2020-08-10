@@ -12,7 +12,6 @@
     let button;
 
     function showVideo() {
-        console.log(current);
         if (current) {
             if(current === button) toggleButton();
             else if (current !== button) {
