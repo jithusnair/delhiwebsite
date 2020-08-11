@@ -1,5 +1,6 @@
 <script>
     import { scale } from 'svelte/transition';
+    import { goto } from '@sapper/app';
 
     export let testPack;
 </script>
@@ -87,7 +88,10 @@
         
         <div class="start-btn">
             <div class="ruler"></div>
-            <button class="btn">Explore</button>
+            <button class="btn" on:click={()=> goto('/tests/' + testPack._id)}>
+                Explore
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
             <p class="validity">Validity: {testPack.validity} days</p>
         </div>
     </div>
