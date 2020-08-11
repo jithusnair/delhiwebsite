@@ -227,7 +227,7 @@
 	}
 
 	.card {
-		margin: auto;
+		margin: 0 auto;
 	}
 
 	@media only screen and (max-width: 1100px) {
@@ -306,6 +306,7 @@
 />
 
 <BuySuccessModal
+	collection = {"course"}
 	display = {displayPaymentSuccess}
 	{orderDetails}
 	courseTitle = {courseDoc.courseTitle}
