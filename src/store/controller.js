@@ -1,6 +1,8 @@
 // Controls question display part of admin
 import { writable } from 'svelte/store';
 
+// Currently Selected Language
+export const selectedEnglish = writable(true); //if false language is Hindi
 
 // Currently Selected Subject
 export const selectedSubject = writable(0);
