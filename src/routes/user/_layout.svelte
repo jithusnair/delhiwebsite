@@ -23,10 +23,10 @@
 
 <style>
 	div {
-		margin-left: 225px;
+		margin-left: 275px;
 	}
 
-	@media only screen and (max-width: 1000px) {
+	@media only screen and (max-width: 1100px) {
 		div {
 			margin-left: 0;
 			padding-top: 2rem;
