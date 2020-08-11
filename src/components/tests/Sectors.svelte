@@ -43,6 +43,21 @@
         margin-right: 3rem;
     }
 
+    @media screen and (max-width: 800px) and (min-width: 600px){
+        .container {
+            margin: 0 auto;
+            display: grid;
+            width: 40rem;
+            grid-template-columns: repeat(20, auto);
+            overflow-x: scroll;
+        }
+
+        .exam-btn {
+            margin-right: 0;
+            margin-bottom: 2rem;
+        }
+    }
+
     @media screen and (max-width: 600px){
         .container {
             margin: 0 auto;
